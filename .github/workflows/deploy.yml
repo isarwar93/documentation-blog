@@ -56,4 +56,9 @@ jobs:
 
       - name: Deploy to S3
         run: |
-          aws s3 sync dist/ s3://aws-s3-bucket1-static-website --delete
+          aws s3 sync ./dist s3://${{ secrets.AWS_S3_BUCKET }} --delete
+
+      - name: Verify S3 deployment
+        run: |
+          echo "===== S3 CONTENT ====="
+          aws s3 ls s3://${{ secrets.AWS_S3_BUCKET }}/ --recursive
