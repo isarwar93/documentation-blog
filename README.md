@@ -5,7 +5,7 @@ A modern, responsive static engineering documentation website and project blog b
 ## Live Website
 
 The production static build is hosted on AWS (S3 + CloudFront):
-- **Live URL:** [https://engineerexperiences.link/](engineerexperiences)
+- **Live URL:** [EngineerExperiences](https://engineerexperiences.link/)
 
 ---
 
