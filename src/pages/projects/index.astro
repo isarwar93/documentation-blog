@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getProjectDocs } from '../../data/docs';
+
+const projectDocs = await getProjectDocs();
+
+const projects = projectDocs.map(({ meta, chapters }) => ({
+  meta,
+  chapterCount: chapters.length,
+  highlights: chapters.map((chapter) => ({
+    title: chapter.title,
+    href: chapter.href,
+  })),
+}));
+
+const chapterTotal = projectDocs.reduce(
+  (total, project) => total + project.chapters.length,
+  0,
+);
+---
+
+<BaseLayout
+  title="Projects | EngineerExperiences"
+  description="Index of every documented engineering project: embedded hardware, firmware, tooling and connected systems."
+>
+  <section class="section">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+        <li>
+          <a href="/">Home</a>
+          <span class="separator" aria-hidden="true">/</span>
+        </li>
+        <li>
+          <span class="current" aria-current="page">Projects</span>
+        </li>
+      </ol>
+    </nav>
+
+    <div class="section-heading">
+      <span class="eyebrow">Engineering systems</span>
+      <h1>All documented projects</h1>
+      <p>
+        {projects.length} platforms and {chapterTotal} chapters of hardware, firmware and
+        platform documentation. Pick a project to open its full chapter list.
+      </p>
+    </div>
+
+    <div class="card-grid">
+      {
+        projects.map((project) => (
+          <ProjectCard
+            project={project.meta}
+            chapterCount={project.chapterCount}
+            highlights={project.highlights}
+          />
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

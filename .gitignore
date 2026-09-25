@@ -215,4 +215,11 @@ marimo/_lsp/
 __marimo__/
 
 # Streamlit
+.streamlit/
+# Node / Astro
+node_modules/
+.astro/
+dist/
+
 .streamlit/secrets.toml
+.clinerules/

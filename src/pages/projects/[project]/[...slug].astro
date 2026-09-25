@@ -1,0 +1,41 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import ProjectDocLayout from '../../../layouts/ProjectDocLayout.astro';
+import { isProjectIndex, resolveDocSlug } from '../../../data/projects';
+
+export async function getStaticPaths() {
+  const docs = await getCollection('projects');
+
+  return docs
+    .filter((entry) => !isProjectIndex(entry.slug))
+    .map((entry) => {
+      const route = resolveDocSlug(entry.slug);
+
+      return {
+        params: { project: route.project, slug: route.chapter },
+        props: { entry },
+      };
+    });
+}
+
+interface Props {
+  entry: CollectionEntry<'projects'>;
+}
+
+const { entry } = Astro.props;
+
+const route = resolveDocSlug(entry.slug);
+
+const { Content, headings } = await entry.render();
+---
+
+<ProjectDocLayout
+  projectSlug={route.project}
+  currentSlug={route.chapter}
+  title={entry.data.title}
+  description={entry.data.description}
+  headings={headings}
+>
+  <Content />
+</ProjectDocLayout>
+

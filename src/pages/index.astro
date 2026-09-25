@@ -1,0 +1,135 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { getProjectDocs } from '../data/docs';
+
+const projectDocs = await getProjectDocs();
+
+const projects = projectDocs.map(({ meta, chapters }) => ({
+  meta,
+  chapterCount: chapters.length,
+  highlights: chapters.slice(0, 3).map((chapter) => ({
+    title: chapter.title,
+    href: chapter.href,
+  })),
+}));
+
+const chapterTotal = projectDocs.reduce(
+  (total, project) => total + project.chapters.length,
+  0,
+);
+---
+
+<BaseLayout
+  title="EngineerExperiences | Engineering Documentation & Lab Notes"
+  description="Architecture notes, firmware deep dives and deployment guides for embedded systems, IoT sensors and biosignal monitoring platforms."
+>
+  <header class="hero">
+    <div class="hero-copy">
+      <span class="eyebrow">Embedded systems · IoT · Biosignals</span>
+      <h1>Engineering documentation for hardware that has to work</h1>
+      <p class="lead">
+        Architecture notes, firmware deep dives and deployment guides for {projects.length}
+        documented platforms — {chapterTotal} chapters covering ESP32 sensor devices, an
+        RP2040 touch-to-USB bridge, TI C2000 firmware tooling and a full-stack biosignal
+        monitoring stack.
+      </p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="/projects/">
+          Explore projects <span aria-hidden="true">→</span>
+        </a>
+        <a class="button button-secondary" href="/projects/kitchen-analyzer/">
+          KitchenAnalyzer docs
+        </a>
+      </div>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar" aria-hidden="true">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="terminal-title">documentation-blog</span>
+      </div>
+      <pre class="terminal-body"><code><span class="comment"># install dependencies</span>
+<span class="prompt">$</span> npm install
+
+<span class="comment"># start the dev server</span>
+<span class="prompt">$</span> npm run dev
+
+<span class="comment"># build the static site into dist/</span>
+<span class="prompt">$</span> npm run build
+
+<span class="comment"># preview the production build</span>
+<span class="prompt">$</span> npm run preview</code></pre>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="section-heading">
+      <span class="eyebrow">Platforms</span>
+      <h2>Documented engineering projects</h2>
+      <p>
+        Each platform is documented from the hardware layer upwards: peripherals and pin
+        maps, firmware architecture, data handling and deployment.
+      </p>
+    </div>
+
+    <div class="card-grid">
+      {
+        projects.map((project) => (
+          <ProjectCard
+            project={project.meta}
+            chapterCount={project.chapterCount}
+            highlights={project.highlights}
+          />
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-heading">
+      <span class="eyebrow">Build &amp; deploy</span>
+      <h2>Static output, published on AWS</h2>
+      <p>
+        The site compiles to static HTML in <code>dist/</code> and is served from Amazon S3
+        through CloudFront, so every page is delivered from the edge cache with no server
+        runtime.
+      </p>
+    </div>
+
+    <div class="card-grid">
+      <article class="card">
+        <h3>Requirements</h3>
+        <p>
+          Node.js 18.14.1 or newer — Node 20 recommended — plus npm 9 or an equivalent
+          package manager.
+        </p>
+        <span class="card-meta"><code>node --version</code> · <code>npm --version</code></span>
+      </article>
+
+      <article class="card">
+        <h3>Preview a build</h3>
+        <p>
+          Compile the production bundle and serve it locally before uploading, so routing
+          and asset paths are verified first.
+        </p>
+        <span class="card-meta"><code>npm run build</code> · <code>npm run preview</code></span>
+      </article>
+
+      <article class="card">
+        <h3>Publish to S3 &amp; CloudFront</h3>
+        <p>
+          Sync <code>dist/</code> to the S3 bucket, then invalidate the CloudFront cache so
+          the new pages go live immediately.
+        </p>
+        <div class="card-footer">
+          <a href="https://d41a2g12567xc.cloudfront.net/" rel="noreferrer">
+            Live site <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </article>
+    </div>
+  </section>
+</BaseLayout>

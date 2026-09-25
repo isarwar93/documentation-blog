@@ -1,0 +1,447 @@
+---
+import { getCollection } from 'astro:content';
+import { PROJECTS, projectTitle, resolveDocSlug } from '../data/projects';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Documentation pages render a sidebar, so the header shows a drawer toggle. */
+  hasSidebar?: boolean;
+}
+
+const {
+  title = 'EngineerExperiences | Engineering Documentation & Lab Notes',
+  description =
+    'Technical documentation and architecture notes for embedded systems, IoT sensors and biosignal monitoring platforms.',
+  hasSidebar = false,
+} = Astro.props;
+
+const path = Astro.url.pathname;
+
+/**
+ * Build-time search index: every documentation chapter with its resolved URL.
+ * The dialog further down filters this list on the client, so search keeps
+ * working on a static S3/CloudFront deployment with no backend involved.
+ */
+const docs = await getCollection('projects');
+const searchIndex = docs
+  .map((entry) => {
+    const route = resolveDocSlug(entry.slug);
+    return {
+      title: entry.data.title,
+      project: projectTitle(route.project),
+      description: entry.data.description,
+      href: route.href,
+    };
+  })
+  .sort((a, b) => a.title.localeCompare(b.title));
+---
+
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#17181c" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script is:inline>
+      // Resolve the stored theme before first paint to avoid a flash of the
+      // wrong palette. "auto" follows the operating-system preference.
+      (function () {
+        var stored = localStorage.getItem('ee-theme') || 'auto';
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = stored === 'auto' ? (prefersDark ? 'dark' : 'light') : stored;
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.themePref = stored;
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) {
+          meta.setAttribute('content', theme === 'dark' ? '#17181c' : '#ffffff');
+        }
+      })();
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="site-title" href="/">
+          <svg
+            class="logo"
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path
+              d="M7 4h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3Z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"></path>
+            <path
+              d="M9 9h6v6H9z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"></path>
+            <path
+              d="M12 1.5V4M12 20v2.5M1.5 12H4M20 12h2.5"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"></path>
+          </svg>
+          <span class="title-text">EngineerExperiences</span>
+          <span class="badge">Docs</span>
+        </a>
+
+        <nav class="header-nav" aria-label="Documentation sets">
+          <a href="/" aria-current={path === '/' ? 'page' : undefined}>Home</a>
+          <a href="/projects/" aria-current={path === '/projects/' ? 'page' : undefined}>
+            Projects
+          </a>
+          {
+            PROJECTS.map((project) => (
+              <a
+                href={`/projects/${project.slug}/`}
+                aria-current={
+                  path.startsWith(`/projects/${project.slug}/`) ? 'page' : undefined
+                }
+              >
+                {project.shortName}
+              </a>
+            ))
+          }
+        </nav>
+
+        <div class="header-actions">
+          <button
+            class="search-trigger"
+            type="button"
+            data-search-open
+            aria-label="Search documentation"
+          >
+            <svg
+              class="icon"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <circle
+                cx="10.5"
+                cy="10.5"
+                r="6.5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"></circle>
+              <path
+                d="m15.5 15.5 4 4"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"></path>
+            </svg>
+            <span class="search-label">Search</span>
+            <span class="kbd-group" aria-hidden="true">
+              <kbd class="kbd">Ctrl</kbd><kbd class="kbd">K</kbd>
+            </span>
+          </button>
+
+          <label class="theme-picker">
+            <span class="visually-hidden">Color theme</span>
+            <svg
+              class="icon"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9Z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"></path>
+            </svg>
+            <select id="theme-select" name="theme">
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+              <option value="auto">Auto</option>
+            </select>
+          </label>
+
+          {
+            hasSidebar && (
+              <button
+                class="menu-toggle"
+                type="button"
+                data-sidebar-toggle
+                aria-expanded="false"
+                aria-controls="doc-sidebar"
+                aria-label="Toggle documentation menu"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path
+                    d="M3 6h18M3 12h18M3 18h18"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </button>
+            )
+          }
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>
+          © {new Date().getFullYear()} EngineerExperiences — engineering documentation for
+          embedded systems, IoT devices and biosignal platforms.
+        </p>
+        <nav aria-label="Footer">
+          <a href="/projects/">All Projects</a>
+          {
+            PROJECTS.map((project) => (
+              <a href={`/projects/${project.slug}/`}>{project.shortName}</a>
+            ))
+          }
+        </nav>
+      </div>
+    </footer>
+
+    <dialog class="search-dialog" id="search-dialog" aria-label="Search documentation">
+      <form class="search-form" method="dialog" role="search" aria-label="Documentation search">
+        <div class="search-field">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <circle
+              cx="10.5"
+              cy="10.5"
+              r="6.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"></circle>
+            <path
+              d="m15.5 15.5 4 4"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"></path>
+          </svg>
+          <input
+            id="search-input"
+            name="q"
+            type="search"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Search documentation…"
+            aria-label="Search documentation"
+          />
+          <kbd class="kbd">Esc</kbd>
+        </div>
+        <p class="search-hint" id="search-hint" aria-live="polite"></p>
+        <ul class="search-results" id="search-results"></ul>
+      </form>
+    </dialog>
+
+    <script
+      is:inline
+      type="application/json"
+      id="search-index"
+      set:html={JSON.stringify(searchIndex)}
+    ></script>
+
+    <script>
+      // --- Theme switching: Dark / Light / Auto ---------------------------
+      const root = document.documentElement;
+      const themeSelect = document.querySelector<HTMLSelectElement>('#theme-select');
+      const themeMeta = document.querySelector('meta[name="theme-color"]');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+      const storageKey = 'ee-theme';
+
+      const applyTheme = (preference: string) => {
+        const theme =
+          preference === 'auto' ? (prefersDark.matches ? 'dark' : 'light') : preference;
+        root.dataset.theme = theme;
+        root.dataset.themePref = preference;
+        localStorage.setItem(storageKey, preference);
+        if (themeSelect) themeSelect.value = preference;
+        if (themeMeta) {
+          themeMeta.setAttribute('content', theme === 'dark' ? '#17181c' : '#ffffff');
+        }
+      };
+
+      if (themeSelect) {
+        applyTheme(localStorage.getItem(storageKey) ?? 'auto');
+        themeSelect.addEventListener('change', () => applyTheme(themeSelect.value));
+        prefersDark.addEventListener('change', () => {
+          if ((localStorage.getItem(storageKey) ?? 'auto') === 'auto') applyTheme('auto');
+        });
+      }
+
+      // --- Documentation sidebar drawer (small screens) -------------------
+      const sidebar = document.getElementById('doc-sidebar');
+      const sidebarToggle = document.querySelector<HTMLButtonElement>('[data-sidebar-toggle]');
+      const sidebarOverlay = document.querySelector<HTMLElement>('[data-sidebar-overlay]');
+
+      const setSidebarOpen = (open: boolean) => {
+        if (!sidebar || !sidebarOverlay) return;
+        sidebar.dataset.open = String(open);
+        sidebarOverlay.dataset.open = String(open);
+        sidebarToggle?.setAttribute('aria-expanded', String(open));
+      };
+
+      if (sidebar && sidebarToggle && sidebarOverlay) {
+        sidebarToggle.addEventListener('click', () => {
+          setSidebarOpen(sidebar.dataset.open !== 'true');
+        });
+        sidebarOverlay.addEventListener('click', () => setSidebarOpen(false));
+        sidebar.addEventListener('click', (event) => {
+          if ((event.target as HTMLElement).closest('a')) setSidebarOpen(false);
+        });
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') setSidebarOpen(false);
+        });
+      }
+
+      // --- Instant search over the build-time index -----------------------
+      interface SearchEntry {
+        title: string;
+        project: string;
+        description: string;
+        href: string;
+      }
+
+      const searchDialog = document.getElementById('search-dialog') as HTMLDialogElement | null;
+      const searchOpen = document.querySelector<HTMLButtonElement>('[data-search-open]');
+      const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
+      const searchResults = document.getElementById('search-results');
+      const searchHint = document.getElementById('search-hint');
+      const searchIndexElement = document.getElementById('search-index');
+
+      if (
+        searchDialog &&
+        searchOpen &&
+        searchInput &&
+        searchResults &&
+        searchHint &&
+        searchIndexElement
+      ) {
+        const entries: SearchEntry[] = JSON.parse(searchIndexElement.textContent || '[]');
+        let matches: SearchEntry[] = [];
+        let activeIndex = -1;
+
+        const setActive = (index: number) => {
+          activeIndex = index;
+          Array.from(searchResults.querySelectorAll('a')).forEach((link, i) => {
+            link.classList.toggle('is-active', i === activeIndex);
+          });
+        };
+
+        const renderResults = () => {
+          const query = searchInput.value.trim().toLowerCase();
+          matches = query
+            ? entries.filter((entry) =>
+                `${entry.title} ${entry.project} ${entry.description}`
+                  .toLowerCase()
+                  .includes(query),
+              )
+            : entries.slice(0, 8);
+
+          searchResults.replaceChildren();
+
+          if (matches.length === 0) {
+            const empty = document.createElement('li');
+            empty.className = 'search-empty';
+            empty.textContent = `No pages match “${searchInput.value.trim()}”`;
+            searchResults.append(empty);
+          } else {
+            matches.forEach((entry, index) => {
+              const item = document.createElement('li');
+              const link = document.createElement('a');
+              link.href = entry.href;
+              if (index === 0) link.classList.add('is-active');
+
+              const title = document.createElement('span');
+              title.className = 'search-result-title';
+              title.textContent = entry.title;
+
+              const meta = document.createElement('span');
+              meta.className = 'search-result-meta';
+              meta.textContent = `${entry.project} — ${entry.description}`;
+
+              link.append(title, meta);
+              item.append(link);
+              searchResults.append(item);
+            });
+          }
+
+          setActive(matches.length > 0 ? 0 : -1);
+          searchHint.textContent = query
+            ? `${matches.length} of ${entries.length} pages match`
+            : `${entries.length} pages indexed`;
+        };
+
+        const openSearchDialog = () => {
+          if (searchDialog.open) return;
+          searchInput.value = '';
+          renderResults();
+          searchDialog.showModal();
+          searchInput.focus();
+        };
+
+        searchOpen.addEventListener('click', openSearchDialog);
+
+        document.addEventListener('keydown', (event) => {
+          if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+            event.preventDefault();
+            openSearchDialog();
+          }
+        });
+
+        searchInput.addEventListener('input', renderResults);
+
+        searchInput.addEventListener('keydown', (event) => {
+          if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            event.preventDefault();
+            if (matches.length === 0) return;
+            const step = event.key === 'ArrowDown' ? 1 : -1;
+            setActive((activeIndex + step + matches.length) % matches.length);
+          } else if (event.key === 'Enter' && matches[activeIndex]) {
+            event.preventDefault();
+            window.location.href = matches[activeIndex].href;
+          }
+        });
+
+        searchDialog.addEventListener('close', () => searchOpen.focus());
+      }
+    </script>
+
+    <style is:global>
+      @import '../styles/global.css';
+    </style>

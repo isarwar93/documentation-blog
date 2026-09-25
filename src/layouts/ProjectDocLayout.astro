@@ -1,0 +1,208 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { getProjectDocs } from '../data/docs';
+
+/** Heading extracted from the rendered Markdown, used for "On this page". */
+export interface TocHeading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  /** Project folder slug the current chapter belongs to. */
+  projectSlug: string;
+  /** Chapter slug inside the project folder, e.g. `architecture` or `index`. */
+  currentSlug: string;
+  /** Chapter title used for the document title and breadcrumb. */
+  title: string;
+  description?: string;
+  /** Headings of the rendered Markdown. */
+  headings?: TocHeading[];
+}
+
+const { projectSlug, currentSlug, title, description, headings = [] } = Astro.props;
+
+const docs = await getProjectDocs();
+
+/** Sidebar tree: every project with its chapters in frontmatter order. */
+const groups = docs.map(({ meta, chapters }) => ({
+  project: meta,
+  pages: chapters.map((chapter) => ({
+    slug: chapter.slug,
+    title: chapter.title,
+    order: chapter.order,
+    href: chapter.href,
+  })),
+}));
+
+const activeGroup = groups.find((group) => group.project.slug === projectSlug);
+const activeIndex = activeGroup?.pages.findIndex((page) => page.slug === currentSlug) ?? -1;
+const previousPage = activeIndex > 0 ? activeGroup?.pages[activeIndex - 1] : undefined;
+const nextPage =
+  activeGroup && activeIndex >= 0 && activeIndex < activeGroup.pages.length - 1
+    ? activeGroup.pages[activeIndex + 1]
+    : undefined;
+
+const isIndexPage = currentSlug === 'index';
+const projectLabel = activeGroup?.project.shortName ?? projectSlug;
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Projects', href: '/projects/' },
+  ...(isIndexPage ? [] : [{ label: projectLabel, href: `/projects/${projectSlug}/` }]),
+];
+
+const tocItems = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+---
+
+<BaseLayout
+  title={`${title} | ${activeGroup?.project.name ?? 'Documentation'} | EngineerExperiences`}
+  description={description}
+  hasSidebar
+>
+  <div class="doc-layout">
+    <div class="sidebar-overlay" data-sidebar-overlay data-open="false"></div>
+
+    <aside class="doc-sidebar" id="doc-sidebar" data-open="false">
+      <nav aria-label="Documentation">
+        {
+          groups.map((group) => (
+            <details class="sidebar-group" open={group.project.slug === projectSlug}>
+              <summary>
+                <svg
+                  class="chevron"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path
+                    d="m9 5 7 7-7 7"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <span class="label">{group.project.shortName}</span>
+                <span class="count">{group.pages.length}</span>
+              </summary>
+              <ul class="sidebar-pages">
+                {group.pages.map((page) => (
+                  <li>
+                    <a
+                      class="sidebar-link"
+                      href={page.href}
+                      aria-current={
+                        group.project.slug === projectSlug && page.slug === currentSlug
+                          ? 'page'
+                          : undefined
+                      }
+                    >
+                      {page.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          ))
+        }
+      </nav>
+    </aside>
+
+    <div class="doc-main">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <ol>
+          {
+            crumbs.map((crumb) => (
+              <li>
+                <a href={crumb.href}>{crumb.label}</a>
+                <span class="separator" aria-hidden="true">
+                  /
+                </span>
+              </li>
+            ))
+          }
+          <li>
+            <span class="current" aria-current="page">{title}</span>
+          </li>
+        </ol>
+      </nav>
+
+      <article class="sl-markdown-content">
+        <slot />
+      </article>
+
+      {
+        (previousPage || nextPage) && (
+          <nav class="pagination" aria-label="Documentation pagination">
+            {previousPage ? (
+              <a class="pagination-link" href={previousPage.href}>
+                <span class="label">
+                  <span aria-hidden="true">←</span> Previous
+                </span>
+                <span class="title">{previousPage.title}</span>
+              </a>
+            ) : null}
+            {nextPage ? (
+              <a class="pagination-link is-next" href={nextPage.href}>
+                <span class="label">
+                  Next <span aria-hidden="true">→</span>
+                </span>
+                <span class="title">{nextPage.title}</span>
+              </a>
+            ) : null}
+          </nav>
+        )
+      }
+    </div>
+
+    <aside class="doc-toc" aria-labelledby="toc-heading">
+      <h2 id="toc-heading">On this page</h2>
+      <ul>
+        {
+          tocItems.map((heading) => (
+            <li class={`toc-depth-${heading.depth}`}>
+              <a href={`#${heading.slug}`}>{heading.text}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </aside>
+  </div>
+</BaseLayout>
+
+<script>
+  // Highlight the section currently in view inside "On this page".
+  const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.doc-toc a'));
+
+  if (tocLinks.length > 0) {
+    const targets = tocLinks
+      .map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))))
+      .filter((target): target is HTMLElement => target !== null);
+
+    const setCurrent = (id: string) => {
+      tocLinks.forEach((link) => {
+        if (decodeURIComponent(link.hash.slice(1)) === id) {
+          link.setAttribute('aria-current', 'true');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible.length > 0) setCurrent(visible[0].target.id);
+      },
+      { rootMargin: '-73px 0px -66% 0px' },
+    );
+
+    targets.forEach((target) => observer.observe(target));
+  }
+</script>

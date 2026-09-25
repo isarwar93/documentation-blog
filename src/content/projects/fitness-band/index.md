@@ -1,4 +1,12 @@
-# Why a Fitness Band Is the Perfect Companion for a Healthier Lifestyle
+---
+title: "PulseAura: Full-Stack Biosignal Monitoring Platform"
+description: "Overview and health technology insights for the PulseAura fitness band."
+project: "fitness-band"
+section: "overview"
+order: 1
+---
+
+# PulseAura: Full-Stack Biosignal Monitoring Platform
 
 In today’s fast-paced world, staying healthy is no longer just about going to the gym or following a strict diet. It is about building habits that support your physical and mental well-being every single day. This is where a fitness band becomes more than a wearable device—it becomes a personal wellness coach that fits seamlessly into your routine.
 
@@ -22,20 +30,8 @@ One of the most overlooked aspects of fitness is recovery. A fitness band helps 
 
 When users can see how many hours they sleep and whether their rest is consistent, they are more likely to make changes that improve their recovery. This makes a fitness band a valuable tool not only for fitness goals but also for long-term health and wellness.
 
-## Motivation That Works in Real Life
-
-Staying motivated is often the hardest part of any health journey. A fitness band helps by turning progress into something visible and encouraging. A completed daily goal, a streak of active days, or a personal record can provide the small boost needed to keep going.
-
-Many people also find that wearable technology helps them stay accountable. When goals are clearly tracked, it becomes easier to build momentum and remain committed. Instead of relying solely on willpower, users have a daily reminder that supports their journey in a practical and encouraging way.
-
-## A Smart Choice for Every Lifestyle
-
-Whether you are preparing for a marathon, returning to exercise after a long break, or simply trying to live more actively, a fitness band can be an excellent investment. It is a simple tool that brings clarity, accountability, and motivation into everyday life.
-
-The best fitness bands are not just about tracking numbers. They are about creating a healthier relationship with your routine. They encourage you to move more, sleep better, and make better choices without adding unnecessary complexity to your day.
-
-## Final Thoughts
-
-A fitness band is more than a gadget—it is a practical companion for anyone who wants to lead a healthier, more balanced life. By offering valuable insights into movement, recovery, and overall wellness, it empowers users to take control of their health with confidence.
-
-In a world where health is increasingly shaped by daily habits, a fitness band provides the support needed to turn intention into action. It is a smart, modern, and dependable tool for building a stronger, healthier future.
+## Technical Architecture Highlights
+- **Embedded Firmware:** ESP32 Bluetooth Low Energy (BLE) peripheral transmitting photoplethysmography (PPG) and accelerometer data.
+- **Backend Services:** C++ high-performance processing server for streaming telemetry.
+- **Storage & Telemetry:** InfluxDB time-series database with Grafana real-time telemetry dashboards.
+- **Client Frontend:** Modern React web application for biosignal visualization.
