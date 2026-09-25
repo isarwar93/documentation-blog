@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SeriesCard from '../../components/SeriesCard.astro';
+import { getSeriesDocs } from '../../data/articles';
+
+const series = await getSeriesDocs();
+
+const partTotal = series.reduce((total, entry) => total + entry.parts.length, 0);
+---
+
+<BaseLayout
+  title="Articles | EngineerExperiences"
+  description="Written series on engineering practice: deployment pipelines, embedded systems and the tooling behind them."
+>
+  <section class="section">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+        <li>
+          <a href="/">Home</a>
+          <span class="separator" aria-hidden="true">/</span>
+        </li>
+        <li>
+          <span class="current" aria-current="page">Articles</span>
+        </li>
+      </ol>
+    </nav>
+
+    <div class="section-heading">
+      <span class="eyebrow">Written series</span>
+      <h1>Articles</h1>
+      <p>
+        {series.length} {series.length === 1 ? 'series' : 'series'} · {partTotal} parts. Articles
+        are written directly in this repository and are not synced from a source repository.
+      </p>
+    </div>
+
+    <div class="card-grid card-grid--series">
+      {series.map((entry) => <SeriesCard series={entry} />)}
+    </div>
+  </section>
+</BaseLayout>

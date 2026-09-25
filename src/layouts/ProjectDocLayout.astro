@@ -1,13 +1,10 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import DocSidebar from '../components/DocSidebar.astro';
+import TocScrollSpy from '../components/TocScrollSpy.astro';
 import { getProjectDocs } from '../data/docs';
-
-/** Heading extracted from the rendered Markdown, used for "On this page". */
-export interface TocHeading {
-  depth: number;
-  slug: string;
-  text: string;
-}
+import { getSidebarSections } from '../data/sidebar';
+import type { TocHeading } from '../data/toc';
 
 interface Props {
   /** Project folder slug the current chapter belongs to. */
@@ -53,6 +50,13 @@ const crumbs = [
 ];
 
 const tocItems = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+
+/** Sidebar tree: projects and article series, shared with `ArticleLayout`. */
+const sections = await getSidebarSections({
+  section: 'projects',
+  slug: projectSlug,
+  part: currentSlug,
+});
 ---
 
 <BaseLayout
@@ -61,56 +65,7 @@ const tocItems = headings.filter((heading) => heading.depth === 2 || heading.dep
   hasSidebar
 >
   <div class="doc-layout">
-    <div class="sidebar-overlay" data-sidebar-overlay data-open="false"></div>
-
-    <aside class="doc-sidebar" id="doc-sidebar" data-open="false">
-      <nav aria-label="Documentation">
-        {
-          groups.map((group) => (
-            <details class="sidebar-group" open={group.project.slug === projectSlug}>
-              <summary>
-                <svg
-                  class="chevron"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                  focusable="false"
-                >
-                  <path
-                    d="m9 5 7 7-7 7"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-                <span class="label">{group.project.shortName}</span>
-                <span class="count">{group.pages.length}</span>
-              </summary>
-              <ul class="sidebar-pages">
-                {group.pages.map((page) => (
-                  <li>
-                    <a
-                      class="sidebar-link"
-                      href={page.href}
-                      aria-current={
-                        group.project.slug === projectSlug && page.slug === currentSlug
-                          ? 'page'
-                          : undefined
-                      }
-                    >
-                      {page.title}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </details>
-          ))
-        }
-      </nav>
-    </aside>
+    <DocSidebar sections={sections} />
 
     <div class="doc-main">
       <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -174,35 +129,4 @@ const tocItems = headings.filter((heading) => heading.depth === 2 || heading.dep
   </div>
 </BaseLayout>
 
-<script>
-  // Highlight the section currently in view inside "On this page".
-  const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.doc-toc a'));
-
-  if (tocLinks.length > 0) {
-    const targets = tocLinks
-      .map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))))
-      .filter((target): target is HTMLElement => target !== null);
-
-    const setCurrent = (id: string) => {
-      tocLinks.forEach((link) => {
-        if (decodeURIComponent(link.hash.slice(1)) === id) {
-          link.setAttribute('aria-current', 'true');
-        } else {
-          link.removeAttribute('aria-current');
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (visible.length > 0) setCurrent(visible[0].target.id);
-      },
-      { rootMargin: '-73px 0px -66% 0px' },
-    );
-
-    targets.forEach((target) => observer.observe(target));
-  }
-</script>
+<TocScrollSpy />

@@ -1,0 +1,40 @@
+---
+/**
+ * Highlights the section currently in view inside "On this page".
+ *
+ * Rendered by both documentation layouts, so chapter pages and article pages
+ * share a single implementation of the scroll spy.
+ */
+---
+
+<script>
+  const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.doc-toc a'));
+
+  if (tocLinks.length > 0) {
+    const targets = tocLinks
+      .map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))))
+      .filter((target): target is HTMLElement => target !== null);
+
+    const setCurrent = (id: string) => {
+      tocLinks.forEach((link) => {
+        if (decodeURIComponent(link.hash.slice(1)) === id) {
+          link.setAttribute('aria-current', 'true');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible.length > 0) setCurrent(visible[0].target.id);
+      },
+      { rootMargin: '-73px 0px -66% 0px' },
+    );
+
+    targets.forEach((target) => observer.observe(target));
+  }
+</script>

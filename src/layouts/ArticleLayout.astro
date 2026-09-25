@@ -1,0 +1,159 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import DocSidebar from '../components/DocSidebar.astro';
+import TocScrollSpy from '../components/TocScrollSpy.astro';
+import { articleDateValue, formatArticleDate, getSeriesDocs } from '../data/articles';
+import { getSidebarSections } from '../data/sidebar';
+import type { TocHeading } from '../data/toc';
+
+interface Props {
+  /** Series folder slug the current part belongs to. */
+  seriesSlug: string;
+  /** Part slug inside the series; `index` for the series landing chapter. */
+  currentPart: string;
+  /** Part title used for the document title and breadcrumb. */
+  title: string;
+  description?: string;
+  /** Headings of the rendered Markdown. */
+  headings?: TocHeading[];
+}
+
+const { seriesSlug, currentPart, title, description, headings = [] } = Astro.props;
+
+const seriesDocs = await getSeriesDocs();
+const activeSeries = seriesDocs.find((series) => series.meta.slug === seriesSlug);
+const meta = activeSeries?.meta;
+const parts = activeSeries?.parts ?? [];
+
+const activeIndex = parts.findIndex((part) => part.slug === currentPart);
+const previousPart = activeIndex > 0 ? parts[activeIndex - 1] : undefined;
+const nextPart =
+  activeIndex >= 0 && activeIndex < parts.length - 1 ? parts[activeIndex + 1] : undefined;
+
+const isLanding = currentPart === 'index';
+/**
+ * The landing chapter occupies index 0 and is not numbered, so part numbers are
+ * the array index and the total is the number of parts without the landing page.
+ */
+const partNumber = !isLanding && activeIndex > 0 ? activeIndex : undefined;
+const totalParts = Math.max(parts.length - 1, 0);
+const partTags = isLanding ? (meta?.tags ?? []) : (parts[activeIndex]?.tags ?? []);
+
+const sections = await getSidebarSections({
+  section: 'articles',
+  slug: seriesSlug,
+  part: currentPart,
+});
+
+const tocItems = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Articles', href: '/articles/' },
+  ...(isLanding ? [] : [{ label: meta?.name ?? seriesSlug, href: `/articles/${seriesSlug}/` }]),
+];
+---
+
+<BaseLayout
+  title={`${title} | ${meta?.name ?? 'Articles'} | EngineerExperiences`}
+  description={description}
+  hasSidebar
+>
+  <div class="doc-layout">
+    <DocSidebar sections={sections} />
+
+    <div class="doc-main">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <ol>
+          {
+            crumbs.map((crumb) => (
+              <li>
+                <a href={crumb.href}>{crumb.label}</a>
+                <span class="separator" aria-hidden="true">
+                  /
+                </span>
+              </li>
+            ))
+          }
+          <li>
+            <span class="current" aria-current="page">{title}</span>
+          </li>
+        </ol>
+      </nav>
+
+      <article class="sl-markdown-content">
+        <header class="article-header">
+          <p class="article-meta">
+            {
+              partNumber && (
+                <span class="article-part">
+                  Part {partNumber} of {totalParts}
+                </span>
+              )
+            }
+            {
+              meta && (
+                <time datetime={articleDateValue(meta.pubDate)}>
+                  {formatArticleDate(meta.pubDate)}
+                </time>
+              )
+            }
+            {
+              partTags.length > 0 && (
+                <span class="tag-list">
+                  {partTags.map((tag) => (
+                    <span class="tag">{tag}</span>
+                  ))}
+                </span>
+              )
+            }
+          </p>
+          <h1>{title}</h1>
+          {description && <p class="lead">{description}</p>}
+        </header>
+
+        <slot />
+      </article>
+
+      {
+        (previousPart || nextPart) && (
+          <nav class="pagination" aria-label="Series pagination">
+            {previousPart ? (
+              <a class="pagination-link" href={previousPart.href}>
+                <span class="label">
+                  <span aria-hidden="true">←</span> Previous
+                </span>
+                <span class="title">{previousPart.title}</span>
+              </a>
+            ) : null}
+            {nextPart ? (
+              <a class="pagination-link is-next" href={nextPart.href}>
+                <span class="label">
+                  Next <span aria-hidden="true">→</span>
+                </span>
+                <span class="title">{nextPart.title}</span>
+              </a>
+            ) : null}
+          </nav>
+        )
+      }
+    </div>
+
+    {
+      tocItems.length > 0 && (
+        <aside class="doc-toc" aria-labelledby="toc-heading">
+          <h2 id="toc-heading">On this page</h2>
+          <ul>
+            {tocItems.map((heading) => (
+              <li class={`toc-depth-${heading.depth}`}>
+                <a href={`#${heading.slug}`}>{heading.text}</a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<TocScrollSpy />

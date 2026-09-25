@@ -9,15 +9,6 @@ The production static build is hosted on AWS (S3 + CloudFront):
 
 ---
 
-## Documented Projects
-
-- **KitchenAnalyzer:** Ultra-low-power ESP32 LOLIN32 environmental monitor (MQ-2 gas, DHT22 climate, PIR motion, 16x2 I2C LCD, deep sleep).
-- **PulseAura / Fitness Band:** Full-stack biosignal monitoring platform (ESP32 firmware, C++ backend, React frontend, InfluxDB, Grafana).
-- **Touch2USB:** RP2040 XPT2046 resistive touch-to-USB HID bridge.
-- **TI Microcontroller Flasher:** TI TMS320F28379D dual-core firmware flasher and bootloader.
-
----
-
 ## Running Locally
 
 ### Prerequisites

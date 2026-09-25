@@ -1,0 +1,67 @@
+---
+import type { SidebarSection } from '../data/sidebar';
+
+interface Props {
+  /** Tree of sections rendered in the sidebar, in order. */
+  sections: SidebarSection[];
+}
+
+const { sections } = Astro.props;
+---
+
+<div class="sidebar-overlay" data-sidebar-overlay data-open="false"></div>
+
+<aside class="doc-sidebar" id="doc-sidebar" data-open="false">
+  <nav aria-label="Documentation">
+    {
+      sections.map((section) => (
+        <>
+          <h2 class="sidebar-title">{section.title}</h2>
+          {section.groups.map((group) => (
+            <details
+              class:list={['sidebar-group', { 'is-active': group.active }]}
+              open={group.active}
+            >
+              <summary>
+                <svg
+                  class="chevron"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path
+                    d="m9 5 7 7-7 7"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <span class="sidebar-group-text">
+                  <span class="label">{group.label}</span>
+                  <span class="count">{group.countLabel}</span>
+                </span>
+              </summary>
+              <ul class="sidebar-pages">
+                {group.pages.map((page) => (
+                  <li>
+                    <a
+                      class="sidebar-link"
+                      href={page.href}
+                      aria-current={page.active ? 'page' : undefined}
+                    >
+                      {page.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          ))}
+        </>
+      ))
+    }
+  </nav>
+</aside>

@@ -38,31 +38,9 @@ const chapterTotal = projectDocs.reduce(
         <a class="button button-primary" href="/projects/">
           Explore projects <span aria-hidden="true">→</span>
         </a>
-        <a class="button button-secondary" href="/projects/kitchen-analyzer/">
-          KitchenAnalyzer docs
-        </a>
       </div>
     </div>
 
-    <div class="terminal">
-      <div class="terminal-bar" aria-hidden="true">
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="terminal-title">documentation-blog</span>
-      </div>
-      <pre class="terminal-body"><code><span class="comment"># install dependencies</span>
-<span class="prompt">$</span> npm install
-
-<span class="comment"># start the dev server</span>
-<span class="prompt">$</span> npm run dev
-
-<span class="comment"># build the static site into dist/</span>
-<span class="prompt">$</span> npm run build
-
-<span class="comment"># preview the production build</span>
-<span class="prompt">$</span> npm run preview</code></pre>
-    </div>
   </header>
 
   <section class="section">
@@ -88,48 +66,4 @@ const chapterTotal = projectDocs.reduce(
     </div>
   </section>
 
-  <section class="section">
-    <div class="section-heading">
-      <span class="eyebrow">Build &amp; deploy</span>
-      <h2>Static output, published on AWS</h2>
-      <p>
-        The site compiles to static HTML in <code>dist/</code> and is served from Amazon S3
-        through CloudFront, so every page is delivered from the edge cache with no server
-        runtime.
-      </p>
-    </div>
-
-    <div class="card-grid">
-      <article class="card">
-        <h3>Requirements</h3>
-        <p>
-          Node.js 18.14.1 or newer — Node 20 recommended — plus npm 9 or an equivalent
-          package manager.
-        </p>
-        <span class="card-meta"><code>node --version</code> · <code>npm --version</code></span>
-      </article>
-
-      <article class="card">
-        <h3>Preview a build</h3>
-        <p>
-          Compile the production bundle and serve it locally before uploading, so routing
-          and asset paths are verified first.
-        </p>
-        <span class="card-meta"><code>npm run build</code> · <code>npm run preview</code></span>
-      </article>
-
-      <article class="card">
-        <h3>Publish to S3 &amp; CloudFront</h3>
-        <p>
-          Sync <code>dist/</code> to the S3 bucket, then invalidate the CloudFront cache so
-          the new pages go live immediately.
-        </p>
-        <div class="card-footer">
-          <a href="https://d41a2g12567xc.cloudfront.net/" rel="noreferrer">
-            Live site <span aria-hidden="true">↗</span>
-          </a>
-        </div>
-      </article>
-    </div>
-  </section>
 </BaseLayout>

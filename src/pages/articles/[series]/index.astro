@@ -1,0 +1,39 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import ArticleLayout from '../../../layouts/ArticleLayout.astro';
+import { isSeriesIndex, resolveArticleSlug } from '../../../data/articles';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('articles');
+
+  return entries
+    .filter((entry) => isSeriesIndex(entry.slug))
+    .map((entry) => {
+      const route = resolveArticleSlug(entry.slug);
+
+      return {
+        params: { series: route.series },
+        props: { entry },
+      };
+    });
+}
+
+interface Props {
+  entry: CollectionEntry<'articles'>;
+}
+
+const { entry } = Astro.props;
+
+const route = resolveArticleSlug(entry.slug);
+const { Content, headings } = await entry.render();
+---
+
+<ArticleLayout
+  seriesSlug={route.series}
+  currentPart={route.part}
+  title={entry.data.title}
+  description={entry.data.description}
+  headings={headings}
+>
+  <Content />
+</ArticleLayout>

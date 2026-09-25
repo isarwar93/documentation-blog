@@ -23,4 +23,32 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { projects };
+/**
+ * Article collection: one folder per series, one file per part.
+ *
+ * Files live in `src/content/articles/<series-slug>/<part>.md`, so a slug looks
+ * like `automated-astro-deployment/github-oidc-to-aws`. The first segment
+ * identifies the series (and must equal the folder name), the rest identify the
+ * part. The folder's `index.md` is the series landing chapter.
+ *
+ * Unlike the `projects` collection, articles are written directly in this
+ * repository: they have no source repository behind them and are therefore
+ * never listed in `docsync.yaml`.
+ */
+const articles = defineCollection({
+  type: 'content',
+  schema: z.object({
+    /** Part title, rendered in the sidebar, TOC and search. */
+    title: z.string(),
+    /** One-sentence summary used for meta descriptions, cards and search. */
+    description: z.string(),
+    /** Series slug this part belongs to (must match its folder name). */
+    series: z.string(),
+    /** Reading order; the landing `index.md` uses `order: 1`. */
+    order: z.number().default(99),
+    /** Optional topic labels rendered as chips. */
+    tags: z.array(z.string()).default([]),
+  }),
+});
+
+export const collections = { projects, articles };

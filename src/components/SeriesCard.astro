@@ -1,0 +1,46 @@
+---
+import { articleDateValue, formatArticleDate, type SeriesDocs } from '../data/articles';
+
+interface Props {
+  /** Series rendered as a card in the article index. */
+  series: SeriesDocs;
+}
+
+const { series } = Astro.props;
+const { meta, parts } = series;
+
+const href = `/articles/${meta.slug}/`;
+---
+
+<article class="card">
+  <div class="badge-row">
+    {meta.tags.map((tag) => <span class="badge">{tag}</span>)}
+  </div>
+
+  <h3>
+    <a href={href}>{meta.name}</a>
+  </h3>
+
+  <p>{meta.summary}</p>
+
+  <ul class="card-chapters">
+    {
+      parts.map((part) => (
+        <li>
+          <a href={part.href}>{part.title}</a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <span class="card-meta">
+    <time datetime={articleDateValue(meta.pubDate)}>{formatArticleDate(meta.pubDate)}</time>
+    · {parts.length} {parts.length === 1 ? 'part' : 'parts'} · {meta.tagline}
+  </span>
+
+  <div class="card-footer">
+    <a href={href}>
+      Read the series <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</article>
