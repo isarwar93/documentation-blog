@@ -33,6 +33,16 @@ export const ARTICLE_SERIES: ArticleSeriesMeta[] = [
     pubDate: new Date('2026-09-25'),
     tags: ['AWS', 'S3', 'CloudFront', 'GitHub Actions'],
   },
+  {
+    slug: 'yocto-project',
+    name: 'Yocto Project',
+    shortName: 'Yocto',
+    tagline: 'Building customized, reproducible embedded Linux with Yocto',
+    summary:
+      'A written series on the Yocto Project: what it actually is, how BitBake, recipes and layers work, and how to build a customized embedded Linux image for an NXP i.MX7 board and a Raspberry Pi 3.',
+    pubDate: new Date('2026-09-25'),
+    tags: ['Yocto', 'Embedded Linux', 'BitBake', 'i.MX7'],
+  },
 ];
 
 const SERIES_MAP = new Map(ARTICLE_SERIES.map((series) => [series.slug, series]));
