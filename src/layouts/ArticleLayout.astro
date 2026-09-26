@@ -55,7 +55,7 @@ const crumbs = [
 ---
 
 <BaseLayout
-  title={`${title} | ${meta?.name ?? 'Articles'} | EngineerExperiences`}
+  title={`${title}${isLanding ? '' : ` | ${meta?.name ?? 'Articles'}`} | EngineerExperiences`}
   description={description}
   hasSidebar
 >
