@@ -9,56 +9,42 @@ permissions:
   id-token: write
   contents: read
 
+# Repository variables are NOT masked by GitHub - only secrets are. GitHub echoes a
+# `run:` script into the log with expressions already expanded, so variables are passed
+# through `env:` and never interpolated into a command line. Keep step debug logging off,
+# never `set -x` a step that reads one, and keep tool output quiet so it cannot echo them.
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Check repository files
-        run: |
-          echo "Current directory:"
-          pwd
-
-          echo "Files:"
-          ls -la
-
-          echo "Git status:"
-          git status
-
-          echo "Lock files:"
-          find . -maxdepth 2 -type f \( \
-            -name "package-lock.json" -o \
-            -name "npm-shrinkwrap.json" -o \
-            -name "yarn.lock" \
-          \) -print
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund
 
       - name: Build Astro
         run: npm run build
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/GitHubActionsDocumentationBlog
           aws-region: eu-north-1
+          # Masks the account id inside this step's output.
           mask-aws-account-id: true
 
       - name: Deploy to S3
+        env:
+          # Bound as an environment variable, so the bucket name never appears in the
+          # echoed script or in the sync output below.
+          AWS_S3_BUCKET: ${{ vars.AWS_S3_BUCKET }}
         run: |
-          aws s3 sync ./dist s3://${{ vars.AWS_S3_BUCKET }} --delete
-
-      - name: Verify S3 deployment
-        run: |
-          echo "===== S3 CONTENT ====="
-          aws s3 ls s3://${{ vars.AWS_S3_BUCKET }}/ --recursive
+          aws s3 sync ./dist "s3://${AWS_S3_BUCKET}" --delete --only-show-errors
