@@ -38,11 +38,14 @@ const chapterTotal = projectDocs.reduce(
     </nav>
 
     <div class="section-heading">
-      <span class="eyebrow">Engineering systems</span>
+       <span class="eyebrow">{projects.length} {projects.length === 1 ? 'project' : 'projects'} · {chapterTotal} chapters.</span>
       <h1>All documented projects</h1>
       <p>
-        {projects.length} platforms and {chapterTotal} chapters of hardware, firmware and
-        platform documentation. Pick a project to open its full chapter list.
+        Each project is documented from the hardware layer upwards: peripherals and pin
+        maps, firmware architecture, data handling and deployment. Each project 
+        has a linked repository to get its related data and firmware. 
+        Following are the projects with their short desctriptions that
+        have been documented in this blog:
       </p>
     </div>
 

@@ -1,12 +1,12 @@
 ---
-title: "KitchenAnalyzer: Ultra-Low-Power Kitchen Environmental Monitor"
+title: "Kitchen Analyzer: Ultra-Low-Power Kitchen Environmental Monitor"
 description: "Overview, hardware specs, and features of the ESP32 LOLIN32 kitchen monitor."
 project: "kitchen-analyzer"
 section: "overview"
 order: 1
 ---
 
-# KitchenAnalyzer Overview
+# Kitchen Analyzer Overview
 
 The **KitchenAnalyzer** is an ultra-low-power environmental monitoring device engineered specifically for home kitchens. Powered by an ESP32 LOLIN32, it continuously evaluates kitchen safety and ambient comfort by tracking combustible gas concentrations, temperature, and humidity, while utilizing motion activation to extend battery life.
 

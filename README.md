@@ -1,6 +1,6 @@
 # EngineerExperiences Documentation & Project Blog
 
-A modern, responsive static engineering documentation website and project blog built with **Astro**. It serves technical documentation, architecture deep dives, and firmware specifications for embedded hardware, IoT devices, and biosignal platforms.
+A modern, responsive static engineering documentation website and project blog built with **Astro**. It serves technical documentation, architecture building and firmware specifications for embedded systems and IoT devices. 
 
 ## Live Website
 
@@ -67,4 +67,6 @@ aws s3 sync dist/ s3://YOUR-S3-BUCKET-NAME --delete
 # 3. Invalidate CloudFront cache (if applicable)
 aws cloudfront create-invalidation --distribution-id YOUR-DISTRIBUTION-ID --paths "/*"
 ```
+
+**Note:** Above given steps are also present in .github/workflows/deploy.yml for automatic deployment.
 

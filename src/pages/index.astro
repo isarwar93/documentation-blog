@@ -1,10 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import SeriesCard from '../components/SeriesCard.astro';
+import { getSeriesDocs } from '../data/articles';
 import { getProjectDocs } from '../data/docs';
 
+const series = await getSeriesDocs();
 const projectDocs = await getProjectDocs();
-
+const partTotal = series.reduce((total, entry) => total + entry.parts.length, 0);
 const projects = projectDocs.map(({ meta, chapters }) => ({
   meta,
   chapterCount: chapters.length,
@@ -26,17 +29,20 @@ const chapterTotal = projectDocs.reduce(
 >
   <header class="hero">
     <div class="hero-copy">
-      <span class="eyebrow">Embedded systems · IoT · Biosignals</span>
-      <h1>Engineering documentation for hardware that has to work</h1>
+      <span class="eyebrow">Embedded systems · IoT Devices · Sensors</span>
+      <h1>Documentation blog, for engineers, by engineers</h1>
       <p class="lead">
-        Architecture notes, firmware deep dives and deployment guides for {projects.length}
-        documented platforms — {chapterTotal} chapters covering ESP32 sensor devices, an
-        RP2040 touch-to-USB bridge, TI C2000 firmware tooling and a full-stack biosignal
-        monitoring stack.
+        This blog is about architecture notes, firmware deep dives and deployment guides. 
+        It is divided into two sections: articles and projects. Where, articles will be having a focus on general learnings, on the other hand, 
+        projects will be discussing architectures and implementation details with practical examples. 
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="/projects/">
           Explore projects <span aria-hidden="true">→</span>
+        </a>
+
+        <a class="button button-primary" href="/articles/">
+          Explore articles <span aria-hidden="true">→</span>
         </a>
       </div>
     </div>
@@ -45,11 +51,14 @@ const chapterTotal = projectDocs.reduce(
 
   <section class="section">
     <div class="section-heading">
-      <span class="eyebrow">Platforms</span>
-      <h2>Documented engineering projects</h2>
+      <span class="eyebrow">{projects.length} {projects.length === 1 ? 'project' : 'projects'} · {chapterTotal} chapters.</span>
+      <h2>Projects</h2>
       <p>
-        Each platform is documented from the hardware layer upwards: peripherals and pin
-        maps, firmware architecture, data handling and deployment.
+        Each project is documented from the hardware layer upwards: peripherals and pin
+        maps, firmware architecture, data handling and deployment. Each project 
+        has a linked repository to get its related data and firmware. 
+        Following are the projects with their short desctriptions that
+        have been documented in this blog:
       </p>
     </div>
 
@@ -63,6 +72,21 @@ const chapterTotal = projectDocs.reduce(
           />
         ))
       }
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-heading">
+      <span class="eyebrow">{series.length} {series.length === 1 ? 'series' : 'series'} · {partTotal} parts.</span>
+      <h1>Articles</h1>
+      <p>
+        Whichever experiences won't fit into a project, will be documented as an article. Following are the articles with their short descriptions that
+        have been documented in this blog:
+      </p>
+    </div>
+
+    <div class="card-grid card-grid--series">
+      {series.map((entry) => <SeriesCard series={entry} />)}
     </div>
   </section>
 
