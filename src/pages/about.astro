@@ -1,9 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { PROJECTS } from '../data/projects';
-import { getSeriesDocs } from '../data/articles';
-
-const series = await getSeriesDocs();
 ---
 
 <BaseLayout
@@ -33,71 +29,7 @@ const series = await getSeriesDocs();
       </p>
     </div>
 
-    <div class="card-grid">
-      {
-        PROJECTS.map((project) => (
-          <article class="card">
-            <div class="badge-row">
-              {project.badges.map((badge) => (
-                <span class="badge">{badge}</span>
-              ))}
-            </div>
-            <h3>
-              <a href={`/projects/${project.slug}/`}>{project.name}</a>
-            </h3>
-            <p>{project.summary}</p>
-            <div class="card-footer">
-              <a href={`/projects/${project.slug}/`}>
-                Read the documentation <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </article>
-        ))
-      }
-    </div>
-  </section>
-
-  <section class="section">
     <div class="section-heading">
-      <span class="eyebrow">Articles</span>
-      <h2>Written series</h2>
-      <p>
-        Not everything belongs to a single project, so longer write-ups live in their own series
-        next to the documentation.
-      </p>
-    </div>
-
-    <div class="card-grid card-grid--series">
-      {
-        series.map((entry) => (
-          <article class="card">
-            <div class="badge-row">
-              {entry.meta.tags.map((tag) => (
-                <span class="badge">{tag}</span>
-              ))}
-            </div>
-            <h3>
-              <a href={`/articles/${entry.meta.slug}/`}>{entry.meta.name}</a>
-            </h3>
-            <p>{entry.meta.summary}</p>
-            <span class="card-meta">
-              {entry.parts.length} {entry.parts.length === 1 ? 'part' : 'parts'} ·{' '}
-              {entry.meta.tagline}
-            </span>
-            <div class="card-footer">
-              <a href={`/articles/${entry.meta.slug}/`}>
-                Read the series <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </article>
-        ))
-      }
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="section-heading">
-      <span class="eyebrow">This site</span>
       <h2>How EngineerExperiences is built</h2>
     </div>
 
@@ -129,11 +61,16 @@ const series = await getSeriesDocs();
         <h3>Source code</h3>
         <p>
           The site, the documentation and the deployment workflow live in one public repository, so
-          every page can be traced back to the commit that published it.
+          every page can be traced back to the commit that published it. There is no comment section
+          here, so corrections, questions and ideas are all welcome as GitHub issues.
         </p>
         <div class="card-footer">
-          <a href="https://github.com/isarwar93" rel="noreferrer">
-            github.com/isarwar93 <span aria-hidden="true">↗</span>
+          <a href="https://github.com/isarwar93/documentation-blog/" rel="noreferrer">
+            github.com/isarwar93/documentation-blog <span aria-hidden="true">↗</span>
+          </a>
+          <span aria-hidden="true">&nbsp;·&nbsp;</span>
+          <a href="https://github.com/isarwar93/documentation-blog/issues" rel="noreferrer">
+            Open an issue <span aria-hidden="true">↗</span>
           </a>
         </div>
       </article>
