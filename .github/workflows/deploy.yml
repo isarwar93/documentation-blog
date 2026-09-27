@@ -36,7 +36,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
-          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/GitHubActionsDocumentationBlog
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionsDocumentationBlog
           aws-region: eu-north-1
           # Masks the account id inside this step's output.
           mask-aws-account-id: true
@@ -45,6 +45,6 @@ jobs:
         env:
           # Bound as an environment variable, so the bucket name never appears in the
           # echoed script or in the sync output below.
-          AWS_S3_BUCKET: ${{ vars.AWS_S3_BUCKET }}
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         run: |
           aws s3 sync ./dist "s3://${AWS_S3_BUCKET}" --delete --only-show-errors
