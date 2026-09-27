@@ -389,6 +389,22 @@ hr {
   display: none;
 }
 
+/* The sidebar button uses a panel glyph, not three lines: the left column fills
+   when the drawer is open, which the hamburger can never show. */
+.menu-toggle .panel-fill {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.menu-toggle[aria-expanded='true'] .panel-fill {
+  opacity: 1;
+}
+
+.menu-toggle[aria-expanded='true'] {
+  border-color: var(--sl-color-accent);
+  color: var(--sl-color-white);
+}
+
 .theme-picker {
   display: inline-flex;
   align-items: center;
