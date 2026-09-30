@@ -2,8 +2,8 @@
 title: "Diagnostics & Debugging Guide"
 description: "Serial logs, sensor verification procedures, and hardware troubleshooting."
 project: "kitchen-analyzer"
-section: "debugging"
-order: 10
+section: "outcome"
+order: 13
 ---
 
 # Diagnostics & Debugging Guide

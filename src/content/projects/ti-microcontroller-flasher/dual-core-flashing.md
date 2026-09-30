@@ -2,8 +2,8 @@
 title: "Synchronized Dual-Core Flashing"
 description: "Kernel injection, CPU1-to-CPU2 IPC synchronization, and bank switching."
 project: "ti-microcontroller-flasher"
-section: "flashing"
-order: 3
+section: "implementation"
+order: 7
 ---
 
 # Synchronized Dual-Core Flashing

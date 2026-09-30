@@ -1,9 +1,9 @@
 ---
 title: "InfluxDB Time-Series Storage"
 description: "Line protocol persistence, retention policies, and schema design."
-project: "fitness-band"
-section: "database"
-order: 6
+project: "pulzaura"
+section: "implementation"
+order: 8
 ---
 
 # InfluxDB Time-Series Storage

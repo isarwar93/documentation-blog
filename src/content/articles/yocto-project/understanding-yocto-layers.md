@@ -2,7 +2,7 @@
 title: "Understanding Yocto Layers"
 description: "Why metadata is split into layers, what a layer may contain, and how a product layer keeps changes separate."
 series: "yocto-project"
-order: 6
+order: 5
 tags: ["Yocto", "Layers"]
 ---
 ## Layers

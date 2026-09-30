@@ -2,7 +2,7 @@
 title: "PICO-IMX7 with Yocto"
 description: "What a BSP provides for a board like the PICO-IMX7, and how Yocto assembles U-Boot, kernel and root filesystem into a bootable image."
 series: "yocto-project"
-order: 9
+order: 8
 tags: ["Yocto", "i.MX7", "BSP"]
 ---
 ## BSP — Board Support Package

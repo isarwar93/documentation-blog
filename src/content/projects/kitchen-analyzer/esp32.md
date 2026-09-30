@@ -2,8 +2,8 @@
 title: "ESP32 LOLIN32 & Pin Configuration"
 description: "Hardware pin mapping, GPIO allocation, and board configuration."
 project: "kitchen-analyzer"
-section: "hardware"
-order: 3
+section: "implementation"
+order: 5
 ---
 
 # ESP32 LOLIN32 Hardware Configuration

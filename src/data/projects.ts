@@ -22,17 +22,17 @@ export interface ProjectMeta {
 export const PROJECTS: ProjectMeta[] = [
   {
     slug: 'kitchen-analyzer',
-    name: 'KitchenAnalyzer',
-    shortName: 'KitchenAnalyzer',
+    name: 'Kitchen Analyzer',
+    shortName: 'Kitchen Analyzer',
     tagline: 'Ultra-low-power ESP32 kitchen safety monitor',
     summary:
       'Battery-powered ESP32 LOLIN32 device that tracks combustible gas, temperature and humidity in a kitchen, waking on PIR motion to save power and reporting readings on a 16x2 I2C LCD.',
     badges: ['ESP32', 'MQ-2', 'DHT22', 'Low-Power'],
   },
   {
-    slug: 'fitness-band',
-    name: 'PulseAura Fitness Band',
-    shortName: 'PulseAura',
+    slug: 'pulzaura',
+    name: 'Pulzaura',
+    shortName: 'Pulzaura',
     tagline: 'Full-stack biosignal monitoring platform',
     summary:
       'End-to-end biosignal platform: ESP32 wearable firmware streaming to a C++ backend, a React frontend for live sessions, InfluxDB time-series storage and Grafana dashboards.',

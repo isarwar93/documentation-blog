@@ -2,7 +2,7 @@
 title: "Raspberry Pi 3 with Yocto"
 description: "The same Yocto concepts on a different board: machine configuration, BSP layers, and what Raspberry Pi is convenient for."
 series: "yocto-project"
-order: 15
+order: 14
 tags: ["Yocto", "Raspberry Pi"]
 ---
 ## Raspberry Pi 3

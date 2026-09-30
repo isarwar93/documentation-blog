@@ -2,7 +2,7 @@
 title: "Building Linux for i.MX7"
 description: "How MACHINE connects the generic build system to an NXP i.MX7 board, and what the first build for that platform looks like."
 series: "yocto-project"
-order: 8
+order: 7
 tags: ["Yocto", "i.MX7", "NXP"]
 ---
 ## Machine configuration

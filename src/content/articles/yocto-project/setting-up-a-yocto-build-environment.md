@@ -2,7 +2,7 @@
 title: "Setting up a Yocto Build Environment"
 description: "Initialising the build directory, setting MACHINE in local.conf, listing layers in bblayers.conf and building the first image."
 series: "yocto-project"
-order: 7
+order: 6
 tags: ["Yocto", "BitBake"]
 ---
 ## Setting up a Yocto build environment

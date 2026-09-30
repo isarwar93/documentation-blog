@@ -2,8 +2,8 @@
 title: "Diagnostics & Serial Debugging"
 description: "UART0 telemetry monitoring at 115200 baud, terminal tools, and troubleshooting."
 project: "touch2usb"
-section: "debugging"
-order: 7
+section: "outcome"
+order: 11
 ---
 
 # Diagnostics & Serial Debugging

@@ -2,8 +2,8 @@
 title: "Signal Filtering & Noise Suppression"
 description: "5-sample median filter, exponential moving average (EMA), and release guard debounce."
 project: "touch2usb"
-section: "filtering"
-order: 5
+section: "implementation"
+order: 8
 ---
 
 # Signal Filtering & Noise Suppression

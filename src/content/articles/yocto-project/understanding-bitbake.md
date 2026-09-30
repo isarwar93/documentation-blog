@@ -2,7 +2,7 @@
 title: "Understanding BitBake"
 description: "The ecosystem around BitBake, how one build target expands into a dependency tree, and the task lifecycle behind every recipe."
 series: "yocto-project"
-order: 4
+order: 3
 tags: ["Yocto", "BitBake"]
 ---
 ## Yocto is not a single program

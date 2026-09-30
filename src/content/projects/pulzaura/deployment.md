@@ -1,9 +1,9 @@
 ---
 title: "Docker Compose Deployment"
 description: "Multi-service orchestration, host networking, and BlueZ D-Bus socket sharing."
-project: "fitness-band"
-section: "deployment"
-order: 8
+project: "pulzaura"
+section: "implementation"
+order: 10
 ---
 
 # Multi-Container Deployment

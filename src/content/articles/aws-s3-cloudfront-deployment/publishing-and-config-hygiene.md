@@ -2,7 +2,7 @@
 title: "Publishing an article and keeping configuration clean"
 description: "What happens after an article is written, the repository structure, and why secrets and variables are not hard-coded into the workflow."
 series: "aws-s3-cloudfront-deployment"
-order: 8
+order: 7
 tags: ["GitHub Actions", "CI/CD"]
 ---
 
@@ -101,85 +101,28 @@ This means the deployment process is version-controlled together with the applic
 
 ## Useful GitHub Actions configuration
 
-The repository can contain these variables:
+This repository holds two secrets:
 
 ```text
-AWS_ROLE_ARN
-AWS_REGION
-S3_BUCKET
-CLOUDFRONT_DISTRIBUTION_ID
+AWS_ACCOUNT_ID
+AWS_S3_BUCKET
 ```
 
-For example:
-
-```text
-AWS_ROLE_ARN
-    ↓
-arn:aws:iam::123456789012:role/GitHubActionsAstroDeployment
-
-AWS_REGION
-    ↓
-eu-central-1
-
-S3_BUCKET
-    ↓
-my-astro-blog-production
-
-CLOUDFRONT_DISTRIBUTION_ID
-    ↓
-E123456789ABC
-```
-
-The exact values are environment-specific.
-
-This means the workflow doesn't need to contain personal infrastructure identifiers.
+The workflow composes the role ARN from the account number, reads the bucket from the environment
+in the deploy step, and writes the region directly into the YAML. Nothing infrastructure-specific
+is hard-coded, and nothing sensitive is printed in the log.
 
 ## Variables vs Secrets
 
-A useful rule is:
+The distinction that matters is masking. A **secret** is replaced with `***` in the log; a
+**variable** is printed as it is, because GitHub echoes a `run:` script with its expressions
+already expanded.
 
-### Use a GitHub variable for non-sensitive configuration
+So the rule for this deployment is: anything that should not appear in a build log is a secret,
+even when it is not a credential. The bucket name qualifies.
 
-Examples:
-
-```text
-AWS_REGION
-S3_BUCKET
-CLOUDFRONT_DISTRIBUTION_ID
-AWS_ROLE_ARN
-```
-
-### Use GitHub Secrets for sensitive values
-
-Examples:
-
-```text
-API keys
-private tokens
-passwords
-third-party credentials
-```
-
-For this architecture, the goal is actually to avoid having AWS access keys altogether.
-
-That's one of the main benefits of OIDC.
-
-So instead of:
-
-```text
-AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY
-```
-
-I have:
-
-```text
-GitHub OIDC
-        ↓
-AWS IAM Role
-        ↓
-Temporary credentials
-```
+The full reasoning, and the exact YAML for both the secret and the environment binding, is in
+[Configuring the workflow](/articles/aws-s3-cloudfront-deployment/configuring-the-deploy-workflow/).
 
 ## Why I don't put secrets directly into YAML
 

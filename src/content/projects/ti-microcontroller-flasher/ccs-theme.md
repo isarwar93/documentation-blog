@@ -2,8 +2,8 @@
 title: "Code Composer Studio Modern Coding Theme"
 description: "Modernizing TI's Eclipse-based IDE with VS Code-like typography and dark color schemes."
 project: "ti-microcontroller-flasher"
-section: "ide"
-order: 5
+section: "implementation"
+order: 8
 ---
 
 # Code Composer Studio Modern Coding Theme

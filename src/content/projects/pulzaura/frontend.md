@@ -1,9 +1,9 @@
 ---
 title: "React 19 Frontend Dashboard"
 description: "Real-time biosignal waveform rendering with Vite, TypeScript, and Tailwind CSS."
-project: "fitness-band"
-section: "frontend"
-order: 5
+project: "pulzaura"
+section: "implementation"
+order: 7
 ---
 
 # React 19 Biosignal Dashboard

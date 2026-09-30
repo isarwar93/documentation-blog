@@ -1,27 +1,39 @@
 ---
-title: "Kitchen Analyzer: Ultra-Low-Power Kitchen Environmental Monitor"
-description: "Overview, hardware specs, and features of the ESP32 LOLIN32 kitchen monitor."
+title: "Overview"
+description: "Battery-powered ESP32 kitchen monitor: gas, climate and motion sensing with deep sleep."
 project: "kitchen-analyzer"
 section: "overview"
 order: 1
 ---
 
-# Kitchen Analyzer Overview
+# Overview
 
-The **KitchenAnalyzer** is an ultra-low-power environmental monitoring device engineered specifically for home kitchens. Powered by an ESP32 LOLIN32, it continuously evaluates kitchen safety and ambient comfort by tracking combustible gas concentrations, temperature, and humidity, while utilizing motion activation to extend battery life.
+An ultra-low-power environmental monitor for a home kitchen, built on an ESP32 LOLIN32. It tracks
+combustible gas, temperature and humidity, wakes on motion, and sleeps again to save battery.
 
-## Core Features
-- **Combustible Gas & Smoke Detection:** Monitored via an analog MQ-2 sensor module.
-- **Climate Monitoring:** High-accuracy ambient temperature and relative humidity via DHT22.
-- **On-Demand Human Presence Activation:** PIR motion sensor automatically activates the system when an occupant enters.
-- **Real-Time Visual Diagnostics:** High-contrast 16x2 character LCD with custom I2C routing.
-- **Ultra-Low-Power Deep Sleep:** ESP32 drops to deep sleep after 20 seconds of inactivity, waking instantaneously via RTC GPIO interrupt.
-- **Battery-Operated Design:** Optimized to run for months on a single LiPo battery charge.
+## Core features
 
-## Bill of Materials
-- **MCU:** ESP32 LOLIN32 Development Board
-- **Gas Sensor:** MQ-2 Combustible Gas & Smoke Sensor
-- **Climate Sensor:** DHT22 (AM2302) Temperature & Humidity Sensor
-- **Motion Sensor:** PIR Motion Sensor (HC-SR501 or similar)
-- **Display:** 16x2 Character LCD with PCF8574 I2C Backpack
-- **Power Source:** 3.7V LiPo Battery with charge regulator
+- **Combustible gas and smoke** measured through an analog MQ-2 module
+- **Climate monitoring** of temperature and relative humidity with a DHT22
+- **On-demand activation**: the device wakes only when the PIR detects motion
+- **Live readings** on a 16x2 character LCD over I2C
+- **Deep sleep** after 20 seconds without motion, woken by an RTC GPIO interrupt
+- **Battery operation** from a single LiPo cell
+
+## In this project
+
+| Chapter | What it covers |
+| --- | --- |
+| [Source repository](/projects/kitchen-analyzer/git-repository/) | repository link, layout, build commands |
+| [System architecture](/projects/kitchen-analyzer/architecture/) | block diagram, state machine, signal flow |
+| [Hardware](/projects/kitchen-analyzer/hardware/) | full pin map, wiring and power notes |
+| [ESP32 LOLIN32 and pin configuration](/projects/kitchen-analyzer/esp32/) | board resources and the pins in use |
+| [MQ-2 gas and smoke sensing](/projects/kitchen-analyzer/mq2-gas-sensor/) | analog reading and interpretation |
+| [DHT22 climate monitoring](/projects/kitchen-analyzer/dht22/) | 1-Wire protocol and sampling |
+| [PIR motion sensing and wakeup](/projects/kitchen-analyzer/pir-motion/) | interrupt source and debounce |
+| [16x2 I2C display interface](/projects/kitchen-analyzer/lcd/) | addressing, backlight, display format |
+| [Low-power and deep sleep architecture](/projects/kitchen-analyzer/low-power/) | wake sources and the idle window |
+| [Firmware build and architecture](/projects/kitchen-analyzer/software/) | PlatformIO setup and dependencies |
+| [Results](/projects/kitchen-analyzer/results/) | what works, and what is not measured |
+| [Diagnostics and debugging guide](/projects/kitchen-analyzer/common-problems/) | serial logs and sensor checks |
+

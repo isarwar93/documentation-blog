@@ -3,12 +3,49 @@ title: "TMS320F28379D Dual-Core Architecture"
 description: "Delfino C28x dual-core MCU, IPC registers, and flash memory bank division."
 project: "ti-microcontroller-flasher"
 section: "architecture"
-order: 2
+order: 3
 ---
 
 # TMS320F28379D Dual-Core Architecture
 
 The Texas Instruments **TMS320F28379D Delfino™** MCU is an ultra-high performance dual-core 32-bit microcontroller engineered for advanced industrial drives, solar inverters, and digital power supplies.
+
+## Block Diagram
+
+```text
++----------------------------------------------------------------------------+
+|  host                                                                     |
+| Host PC                                                                   |
+| serial_flash_programmer                                                   |
+| C++  -  CMake or Visual Studio                                            |
++----------------------------------------------------------------------------+
+   --------  SCI-A serial boot: COM port, 9600 baud  -------->
++----------------------------------------------------------------------------+
+|  device                                                                   |
+| CPU1  -  C28x core, 200 MHz                                               |
+| receives the flash kernel,                                                |
+| runs it, then hands over                                                  |
++----------------------------------------------------------------------------+
+   ------  IPC registers IPC_BOOT_STS / IPC_COMMAND   ------>  flash bank control
++----------------------------------------------------------------------------+
+|  device                                                                   |
+| CPU2  -  C28x core, 200 MHz                                               |
+| starts on the IPC interrupt,                                              |
+| programs its own sectors                                                  |
++----------------------------------------------------------------------------+
+   ------  ------------------------------
++----------------------------------------------------------------------------+
+|  on-chip flash, 1024 KB in two banks                                      |
+| Flash Bank 0  -  sectors A to N                                            |
+| the bank the device runs from                                              |
++----------------------------------------------------------------------------+
+   ------  ------------------------------
++----------------------------------------------------------------------------+
+|  switched by bank_change_flash.py                                         |
+| Flash Bank 1  -  mirror partition                                          |
+| stages the next image                                                      |
++----------------------------------------------------------------------------+
+```
 
 ## Core Processing Engines
 - **CPU1 & CPU2:** Dual independent 200 MHz C28x 32-bit DSP cores.

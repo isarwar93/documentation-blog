@@ -2,8 +2,8 @@
 title: "MQ-2 Gas & Smoke Sensing"
 description: "Sensor operating principles, calibration parameters, and regression curve calculation."
 project: "kitchen-analyzer"
-section: "sensors"
-order: 4
+section: "implementation"
+order: 6
 ---
 
 # MQ-2 Gas & Smoke Sensor

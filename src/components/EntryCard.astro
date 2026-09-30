@@ -1,0 +1,72 @@
+---
+/**
+ * The one card shape used for both documented projects and article series.
+ *
+ * Both cards render through this component, so the two can never drift apart:
+ * same order, same spacing, the same number of child links, the same meta line.
+ * Only the nouns change, because a project has chapters and a series has parts.
+ */
+
+/** A child link listed inside the card. */
+export interface CardLink {
+  title: string;
+  href: string;
+}
+
+interface Props {
+  href: string;
+  title: string;
+  badges: string[];
+  summary: string;
+  /** Child links; at most MAX_LINKS are shown, the rest are counted in the meta. */
+  links: CardLink[];
+  /** Count line, e.g. "10 chapters" or "17 parts". */
+  count: string;
+  tagline: string;
+  /** Optional publication date, shown before the count. */
+  published?: { value: string; label: string };
+  /** Footer link text, e.g. "Read the documentation". */
+  action: string;
+}
+
+/** How many child links a card shows before the count line takes over. */
+const MAX_LINKS = 3;
+
+const {
+  href, title, badges, summary, links, count, tagline, published, action,
+} = Astro.props;
+
+const shown = links.slice(0, MAX_LINKS);
+---
+
+<article class="card">
+  <div class="badge-row">
+    {badges.map((badge) => <span class="badge">{badge}</span>)}
+  </div>
+
+  <h3>
+    <a href={href}>{title}</a>
+  </h3>
+
+  <p>{summary}</p>
+
+  {
+    shown.length > 0 && (
+      <ul class="card-chapters">
+        {shown.map((link) => (
+          <li>
+            <a href={link.href}>{link.title}</a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  <span class="card-meta">{published && <><time datetime={published.value}>{published.label}</time> · </>}{count} · {tagline}</span>
+
+  <div class="card-footer">
+    <a href={href}>
+      {action} <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</article>

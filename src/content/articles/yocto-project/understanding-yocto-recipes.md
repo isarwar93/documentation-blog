@@ -2,7 +2,7 @@
 title: "Understanding Yocto Recipes"
 description: "Anatomy of a .bb recipe: where the source comes from, how it compiles and where the files are installed."
 series: "yocto-project"
-order: 5
+order: 4
 tags: ["Yocto", "BitBake", "Recipes"]
 ---
 ## Recipes

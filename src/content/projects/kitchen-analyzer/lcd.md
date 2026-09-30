@@ -2,8 +2,8 @@
 title: "16x2 I2C Display Interface"
 description: "Custom I2C bus wiring, PCF8574 backpack, and diagnostic matrix layout."
 project: "kitchen-analyzer"
-section: "display"
-order: 7
+section: "implementation"
+order: 9
 ---
 
 # 16x2 I2C LCD Interface

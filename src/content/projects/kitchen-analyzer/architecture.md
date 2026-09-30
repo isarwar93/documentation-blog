@@ -3,7 +3,7 @@ title: "System Architecture"
 description: "Hardware interfacing, operational state machine, and communication architecture."
 project: "kitchen-analyzer"
 section: "architecture"
-order: 2
+order: 3
 ---
 
 # System Architecture

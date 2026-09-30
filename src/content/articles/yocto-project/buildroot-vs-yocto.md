@@ -2,7 +2,7 @@
 title: "Buildroot vs Yocto"
 description: "The alternatives to Yocto, and what each build system optimizes for when choosing between them."
 series: "yocto-project"
-order: 3
+order: 2
 tags: ["Yocto", "Buildroot"]
 ---
 ## Why use Yocto?

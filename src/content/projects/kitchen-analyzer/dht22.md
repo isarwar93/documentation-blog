@@ -2,8 +2,8 @@
 title: "DHT22 Climate Monitoring"
 description: "Precision temperature and relative humidity measurement on GPIO 13."
 project: "kitchen-analyzer"
-section: "sensors"
-order: 5
+section: "implementation"
+order: 7
 ---
 
 # DHT22 (AM2302) Temperature & Humidity

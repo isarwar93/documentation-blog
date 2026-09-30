@@ -3,7 +3,7 @@ title: "Hardware Interfacing & Signal Flow"
 description: "SPI0 pinout, PENIRQ interrupt timing, and bus electrical characteristics."
 project: "touch2usb"
 section: "architecture"
-order: 2
+order: 3
 ---
 
 # Hardware Interfacing & Signal Flow

@@ -2,8 +2,8 @@
 title: "Firmware Build & Architecture"
 description: "PlatformIO configuration, library dependencies, and build instructions."
 project: "kitchen-analyzer"
-section: "firmware"
-order: 9
+section: "architecture"
+order: 11
 ---
 
 # Firmware & PlatformIO Build

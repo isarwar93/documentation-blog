@@ -1,9 +1,9 @@
 ---
 title: "C++ High-Performance Backend"
 description: "oatpp REST + WebSocket server, BlueZ D-Bus integration, and threading model."
-project: "fitness-band"
-section: "backend"
-order: 4
+project: "pulzaura"
+section: "implementation"
+order: 6
 ---
 
 # C++20 oatpp Backend Service

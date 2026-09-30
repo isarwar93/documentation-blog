@@ -2,8 +2,8 @@
 title: "USB HID Descriptors: Mouse vs. Digitizer"
 description: "USB report descriptor anatomy, HID usage tables, and operating system enumeration."
 project: "touch2usb"
-section: "usb-hid"
-order: 4
+section: "implementation"
+order: 6
 ---
 
 # USB HID Descriptors: Mouse vs Digitizer

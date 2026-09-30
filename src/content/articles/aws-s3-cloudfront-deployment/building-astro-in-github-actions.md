@@ -2,7 +2,7 @@
 title: "Building the Astro site in GitHub Actions"
 description: "Why Astro fits a static engineering blog, what the repository must contain for CI to work, and why the workflow installs dependencies with npm ci."
 series: "aws-s3-cloudfront-deployment"
-order: 3
+order: 2
 tags: ["Astro", "GitHub Actions", "npm"]
 ---
 

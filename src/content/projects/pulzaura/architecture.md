@@ -1,9 +1,9 @@
 ---
 title: "System Architecture"
 description: "Microservices, BLE telemetry stream, C++ backend, InfluxDB, and Grafana."
-project: "fitness-band"
+project: "pulzaura"
 section: "architecture"
-order: 2
+order: 3
 ---
 
 # Pulzaura System Architecture

@@ -2,8 +2,8 @@
 title: "Host SCI Flasher Tool (`serial_flash_programmer`)"
 description: "C++ cross-platform host programmer utility, packet structure, and CLI usage."
 project: "ti-microcontroller-flasher"
-section: "flashing"
-order: 4
+section: "implementation"
+order: 6
 ---
 
 # Host SCI Flasher Utility

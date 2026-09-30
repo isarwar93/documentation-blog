@@ -2,8 +2,8 @@
 title: "PIR Motion Sensing & Wakeup"
 description: "Motion-based activation and ESP32 EXT0 RTC interrupt configuration."
 project: "kitchen-analyzer"
-section: "power"
-order: 6
+section: "implementation"
+order: 8
 ---
 
 # PIR Motion Sensor & EXT0 Wakeup

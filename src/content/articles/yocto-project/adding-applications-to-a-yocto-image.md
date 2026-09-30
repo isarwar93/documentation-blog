@@ -2,7 +2,7 @@
 title: "Adding Applications to a Yocto Image"
 description: "Extending an image with packages, writing a recipe for a custom application and enabling its systemd service at boot."
 series: "yocto-project"
-order: 12
+order: 11
 tags: ["Yocto", "Systemd", "Recipes"]
 ---
 ## Adding packages to the image

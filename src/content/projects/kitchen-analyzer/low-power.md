@@ -2,8 +2,8 @@
 title: "Low-Power & Deep Sleep Architecture"
 description: "Energy preservation strategies, current consumption minimization, and battery lifecycle."
 project: "kitchen-analyzer"
-section: "power"
-order: 8
+section: "implementation"
+order: 10
 ---
 
 # Low-Power & Deep Sleep Architecture
@@ -12,7 +12,7 @@ order: 8
 In standard active mode, the ESP32 with LCD backlight draws approximately 80–120 mA. Operating continuously on a 2000 mAh LiPo battery would drain the device in less than a day.
 
 ## Deep Sleep Strategy
-Kitchen occupancy is intermittent. KitchenAnalyzer employs a strict power budget:
+Kitchen occupancy is intermittent. The device employs a strict power budget:
 1. When motion stops, a 20-second countdown initiates (`NO_MOTION_TIMEOUT_S = 20`).
 2. When the timer expires:
    - LCD backlight is deactivated: `lcd.noBacklight()`.

@@ -2,7 +2,7 @@
 title: "Authenticating GitHub Actions to AWS with OIDC"
 description: "Creating the GitHub OIDC identity provider in AWS and an IAM role restricted to this repository and branch, so the workflow assumes a role instead of storing access keys."
 series: "aws-s3-cloudfront-deployment"
-order: 5
+order: 4
 tags: ["AWS", "OIDC", "IAM", "Security"]
 ---
 
@@ -90,7 +90,7 @@ Next, create an IAM role for GitHub Actions.
 For example:
 
 ```text
-GitHubActionsAstroDeployment
+GitHubActionsDocumentationBlog
 ```
 
 The role is responsible for two things:

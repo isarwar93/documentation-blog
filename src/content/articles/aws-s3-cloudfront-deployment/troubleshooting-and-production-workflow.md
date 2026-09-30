@@ -1,8 +1,8 @@
 ---
-title: "Troubleshooting, invalidation and the final workflow"
-description: "The failures that actually happen in CI: lock file errors, OIDC AssumeRoleWithWebIdentity errors, S3 access denied and region mismatches, plus automatic CloudFront invalidation."
+title: "Troubleshooting and the production workflow"
+description: "The failures that actually happen in CI: lock file errors, OIDC AssumeRoleWithWebIdentity errors, S3 access denied and region mismatches, plus how to add cache invalidation."
 series: "aws-s3-cloudfront-deployment"
-order: 9
+order: 8
 tags: ["Troubleshooting", "GitHub Actions", "AWS"]
 ---
 
@@ -123,7 +123,7 @@ The AWS region must be consistent.
 The GitHub Action uses:
 
 ```yaml
-aws-region: ${{ vars.AWS_REGION }}
+aws-region: eu-north-1
 ```
 
 The S3 bucket exists in a specific region.
@@ -132,11 +132,9 @@ CloudFront then references the S3 origin.
 
 If the region is incorrect, deployment or origin access can fail.
 
-So check the S3 bucket's actual region and use that value for:
-
-```text
-AWS_REGION
-```
+So check the S3 bucket's actual region, and make sure the `aws-region` value in the workflow matches
+it. A mismatch there is the most common cause of a successful AssumeRole step followed by an S3
+access-denied error.
 
 ## Optional improvement: automatic CloudFront invalidation
 
@@ -150,23 +148,25 @@ The command is:
 
 ```bash
 aws cloudfront create-invalidation \
-  --distribution-id "${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}" \
+  --distribution-id "$DISTRIBUTION_ID" \
   --paths "/*"
 ```
 
 The workflow can therefore become:
 
 ```yaml
-- name: Deploy to S3
-  run: |
-    aws s3 sync dist/ "s3://${{ vars.S3_BUCKET }}" --delete
-
 - name: Invalidate CloudFront
+  env:
+    DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
   run: |
     aws cloudfront create-invalidation \
-      --distribution-id "${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}" \
+      --distribution-id "$DISTRIBUTION_ID" \
       --paths "/*"
 ```
+
+This deployment does not use that step today: the sync replaces the files, and a page already
+cached at the edge keeps serving the previous build until its TTL expires. Add the step when a
+stale page is worse than an extra API call.
 
 If this is used, the IAM role needs permission for CloudFront invalidation.
 
@@ -186,7 +186,7 @@ Astro's AWS deployment documentation also demonstrates S3 synchronization follow
 
 ## Final production workflow
 
-With CloudFront invalidation included, the complete workflow becomes:
+The workflow that runs on every push is:
 
 ```yaml
 name: Deploy Astro to S3
@@ -206,48 +206,46 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund
 
       - name: Build Astro
         run: npm run build
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
-          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
-          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionsDocumentationBlog
+          aws-region: eu-north-1
+          mask-aws-account-id: true
 
       - name: Deploy to S3
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         run: |
-          aws s3 sync dist/ "s3://${{ vars.S3_BUCKET }}" --delete
-
-      - name: Invalidate CloudFront
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id "${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}" \
-            --paths "/*"
+          aws s3 sync ./dist "s3://${AWS_S3_BUCKET}" --delete --only-show-errors
 ```
 
 This workflow contains no:
 
 ```text
-AWS account ID
 AWS access key
 AWS secret access key
-personal bucket name
 personal domain
 ```
 
-The infrastructure-specific values are supplied through GitHub Actions configuration.
+The account number and the bucket name come from repository secrets, and the region is written
+directly into the workflow. See
+[Configuring the workflow](/articles/aws-s3-cloudfront-deployment/configuring-the-deploy-workflow/)
+for why they are secrets and not variables.
 
 ## The final architecture
 

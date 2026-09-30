@@ -2,7 +2,7 @@
 title: "Building a Production Embedded Linux Image"
 description: "Reproducible builds, SSTATE caches, CI, common beginner mistakes, a practical workflow and taking a board to a product."
 series: "yocto-project"
-order: 17
+order: 16
 tags: ["Yocto", "CI/CD", "SSTATE"]
 ---
 ## Why this is useful for embedded products

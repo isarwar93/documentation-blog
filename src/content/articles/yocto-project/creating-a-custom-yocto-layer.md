@@ -2,7 +2,7 @@
 title: "Creating a Custom Yocto Layer"
 description: "Creating a product layer, and why vendor layers should stay untouched across BSP updates."
 series: "yocto-project"
-order: 11
+order: 10
 tags: ["Yocto", "Layers", "BSP"]
 ---
 ## Creating your own Yocto layer

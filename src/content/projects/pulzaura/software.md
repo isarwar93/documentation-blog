@@ -1,9 +1,9 @@
 ---
 title: "ESP32 Firmware Architecture"
 description: "NimBLE GATT server, 9-channel float struct, and MAX3010x pulse oximeter integration."
-project: "fitness-band"
-section: "firmware"
-order: 3
+project: "pulzaura"
+section: "architecture"
+order: 5
 ---
 
 # ESP32 Wearable Firmware

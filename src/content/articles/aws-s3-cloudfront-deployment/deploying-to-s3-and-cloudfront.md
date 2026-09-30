@@ -2,7 +2,7 @@
 title: "Building, uploading to S3 and serving through CloudFront"
 description: "The build and upload steps, why CloudFront sits in front of S3, and using a CloudFront Function to serve clean URLs without index.html."
 series: "aws-s3-cloudfront-deployment"
-order: 7
+order: 6
 tags: ["AWS", "CloudFront", "S3"]
 ---
 
@@ -47,13 +47,13 @@ It deploys this generated output.
 The deployment command is:
 
 ```bash
-aws s3 sync dist/ "s3://${{ vars.S3_BUCKET }}" --delete
+aws s3 sync ./dist "s3://${AWS_S3_BUCKET}" --delete --only-show-errors
 ```
 
 The important part is:
 
 ```text
-dist/
+./dist
 ```
 
 on the left.
@@ -63,10 +63,11 @@ That's the local build output.
 The right side is:
 
 ```text
-s3://${{ vars.S3_BUCKET }}
+s3://${AWS_S3_BUCKET}
 ```
 
-which comes from GitHub Actions configuration.
+where `AWS_S3_BUCKET` comes from a repository secret. The workflow binds it to an environment
+variable rather than writing it into the command, so the value is masked in the log.
 
 Therefore the workflow itself remains generic.
 
@@ -85,7 +86,7 @@ YOUR_S3_BUCKET.s3.YOUR_AWS_REGION.amazonaws.com
 For example:
 
 ```text
-my-astro-blog-production.s3.eu-central-1.amazonaws.com
+my-astro-blog-production.s3.eu-north-1.amazonaws.com
 ```
 
 The exact endpoint depends on the bucket's region.

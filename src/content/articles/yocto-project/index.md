@@ -1,5 +1,5 @@
 ---
-title: "Yocto Project"
+title: "Overview"
 description: "A written series on the Yocto Project: what it is, how BitBake, recipes and layers work, and how to build a customized, reproducible embedded Linux image for an NXP i.MX7 board and a Raspberry Pi 3."
 series: "yocto-project"
 order: 1
@@ -39,9 +39,54 @@ In this series, I use Yocto to understand how embedded Linux is assembled and ho
 
 The examples focus particularly on **NXP i.MX7**, including the **PICO-IMX7**, as well as the **Raspberry Pi 3**.
 
+## What is Yocto?
+
+Yocto is commonly misunderstood as a Linux distribution.
+
+It is not.
+
+Yocto is a **build system and collection of tools and metadata used to create customized Linux-based systems**.
+
+The important idea is:
+
+> Yocto builds the Linux system that you want instead of giving you a fixed Linux system.
+
+For example, imagine that we have an embedded device with:
+
+* an ARM processor
+* 512 MB RAM
+* eMMC storage
+* Ethernet
+* Wi-Fi
+* a touchscreen
+* one custom application
+
+A normal Linux distribution may contain hundreds or thousands of packages that our device does not need.
+
+With Yocto, we can build an image containing only the components required by our system.
+
+Conceptually:
+
+```text
+                 Yocto Project
+                       |
+          +------------+------------+
+          |            |            |
+       Kernel       Bootloader    Root FS
+          |            |            |
+          +------------+------------+
+                       |
+                 Embedded Image
+                       |
+              +--------+--------+
+              |                 |
+          Target Board      Target Board
+```
+
+The final result can be an image that is flashed onto the embedded device.
+
 ## What this series covers
 
-- [What is Yocto?](/articles/yocto-project/what-is-yocto/) — Why Yocto is a build system rather than a distribution, and what a customized embedded image actually contains.
 - [Buildroot vs Yocto](/articles/yocto-project/buildroot-vs-yocto/) — The alternatives to Yocto, and what each build system optimizes for when choosing between them.
 - [Understanding BitBake](/articles/yocto-project/understanding-bitbake/) — The ecosystem around BitBake, how one build target expands into a dependency tree, and the task lifecycle behind every recipe.
 - [Understanding Yocto Recipes](/articles/yocto-project/understanding-yocto-recipes/) — Anatomy of a .bb recipe: where the source comes from, how it compiles and where the files are installed.

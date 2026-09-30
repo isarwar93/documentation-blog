@@ -2,7 +2,7 @@
 title: "Debugging Yocto Builds"
 description: "Reading a large BitBake failure from the first real error, the useful commands, the build directory and the dependency-graph mental model."
 series: "yocto-project"
-order: 16
+order: 15
 tags: ["Yocto", "BitBake", "Debugging"]
 ---
 ## Debugging Yocto

@@ -2,8 +2,8 @@
 title: "PlatformIO Arduino Mouse Target"
 description: "Arduino-Pico core, PlatformIO environment, and relative mouse emulation."
 project: "touch2usb"
-section: "platformio"
-order: 6
+section: "implementation"
+order: 9
 ---
 
 # PlatformIO Arduino Mouse Target

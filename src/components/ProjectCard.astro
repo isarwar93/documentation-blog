@@ -1,4 +1,5 @@
 ---
+import EntryCard from './EntryCard.astro';
 import type { ProjectMeta } from '../data/projects';
 
 interface Props {
@@ -13,34 +14,13 @@ const { project, chapterCount, highlights } = Astro.props;
 const href = `/projects/${project.slug}/`;
 ---
 
-<article class="card">
-  <div class="badge-row">
-    {project.badges.map((badge) => <span class="badge">{badge}</span>)}
-  </div>
-
-  <h3>
-    <a href={href}>{project.name}</a>
-  </h3>
-
-  <p>{project.summary}</p>
-
-  {
-    highlights.length > 0 && (
-      <ul class="card-chapters">
-        {highlights.map((highlight) => (
-          <li>
-            <a href={highlight.href}>{highlight.title}</a>
-          </li>
-        ))}
-      </ul>
-    )
-  }
-
-  <span class="card-meta">{chapterCount} documented chapters · {project.tagline}</span>
-
-  <div class="card-footer">
-    <a href={href}>
-      Read the documentation <span aria-hidden="true">→</span>
-    </a>
-  </div>
-</article>
+<EntryCard
+  href={href}
+  title={project.name}
+  badges={project.badges}
+  summary={project.summary}
+  links={highlights}
+  count={`${chapterCount} ${chapterCount === 1 ? 'chapter' : 'chapters'}`}
+  tagline={project.tagline}
+  action="Read the documentation"
+/>

@@ -2,7 +2,7 @@
 title: "Setting up Wi-Fi in Yocto"
 description: "From the Wi-Fi chip to a network interface: driver, firmware, wpa_supplicant and a bottom-up debugging order."
 series: "yocto-project"
-order: 10
+order: 9
 tags: ["Yocto", "Wi-Fi", "Networking"]
 ---
 ## Configuring Wi-Fi

@@ -1,9 +1,9 @@
 ---
 title: "Diagnostics & Troubleshooting"
 description: "BlueZ D-Bus debugging, WebSocket frame inspection, and container health verification."
-project: "fitness-band"
-section: "debugging"
-order: 9
+project: "pulzaura"
+section: "outcome"
+order: 12
 ---
 
 # Diagnostics & Troubleshooting

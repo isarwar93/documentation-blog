@@ -2,7 +2,7 @@
 title: "Modifying the Linux Kernel"
 description: "What the kernel does on an embedded board, and how to patch or extend a vendor recipe with a .bbappend."
 series: "yocto-project"
-order: 13
+order: 12
 tags: ["Yocto", "Linux Kernel"]
 ---
 ## Linux kernel

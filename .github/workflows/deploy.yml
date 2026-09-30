@@ -48,21 +48,3 @@ jobs:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         run: |
           aws s3 sync ./dist "s3://${AWS_S3_BUCKET}" --delete --only-show-errors
-
-      - name: Invalidate the CloudFront cache
-        env:
-          # Required, or the edge keeps serving HTML that points at the previous
-          # build's hashed assets, which the sync above has already deleted. Those
-          # pages then load with no CSS and a 403 in the console.
-          DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
-        run: |
-          if [ -z "${DISTRIBUTION_ID}" ]; then
-            echo "::warning::AWS_CLOUDFRONT_DISTRIBUTION_ID is not set, so the cache was not" >&2
-            echo "::warning::invalidated. Visitors may see unstyled pages until the TTL expires." >&2
-            exit 0
-          fi
-          aws cloudfront create-invalidation \
-            --distribution-id "${DISTRIBUTION_ID}" \
-            --paths '/*' \
-            --query 'Invalidation.Id' \
-            --output text

@@ -1,9 +1,9 @@
 ---
 title: "Grafana Analytics & Telemetry"
 description: "Auto-provisioned biosensor dashboards and real-time refresh configuration."
-project: "fitness-band"
-section: "grafana"
-order: 7
+project: "pulzaura"
+section: "implementation"
+order: 9
 ---
 
 # Grafana Real-Time Analytics

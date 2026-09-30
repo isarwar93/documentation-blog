@@ -2,7 +2,7 @@
 title: "Creating a private S3 bucket"
 description: "Creating the S3 bucket that holds the generated website and keeping it private so only CloudFront can read it."
 series: "aws-s3-cloudfront-deployment"
-order: 4
+order: 3
 tags: ["AWS", "S3", "Security"]
 ---
 

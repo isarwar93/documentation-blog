@@ -2,7 +2,7 @@
 title: "Understanding Device Trees"
 description: "How a device tree describes UARTs, I2C, SPI, GPIO, regulators and interrupts to the kernel, and what Yocto deploys with it."
 series: "yocto-project"
-order: 14
+order: 13
 tags: ["Yocto", "Device Tree"]
 ---
 ## Device Tree

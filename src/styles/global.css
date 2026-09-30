@@ -320,7 +320,8 @@ hr {
   align-items: center;
   gap: 0.5rem;
   min-width: 13rem;
-  padding: 0.375rem 0.5rem 0.375rem 0.75rem;
+  /* No block padding: the height is fixed below, and the content centres. */
+  padding: 0 0.5rem 0 0.75rem;
   border: 1px solid var(--sl-color-hairline-light);
   border-radius: var(--sl-radius-md);
   background-color: transparent;
@@ -383,8 +384,8 @@ hr {
   color: var(--sl-color-white);
 }
 
-/* Both icon buttons are revealed by the responsive rules in section 12. */
-.menu-toggle,
+/* The nav toggle is revealed by the responsive rules in section 12. The sidebar
+   toggle is always shown, because the sidebar collapses at every width. */
 .nav-toggle {
   display: none;
 }
@@ -403,6 +404,28 @@ hr {
 .menu-toggle[aria-expanded='true'] {
   border-color: var(--sl-color-accent);
   color: var(--sl-color-white);
+}
+
+/* One control size for every header action, so the row reads as a single toolbar
+   on desktop and on mobile alike. Without this the search box is sized by its
+   content: a few pixels taller than the rest on desktop, and visibly shorter on
+   mobile once the label and the Ctrl K key caps are hidden. */
+.search-trigger,
+.theme-picker,
+.menu-toggle,
+.nav-toggle {
+  height: 2.25rem;
+  border: 1px solid var(--sl-color-hairline-light);
+  border-radius: var(--sl-radius-md);
+}
+
+/* Every header glyph is drawn at the same size, whichever view it is. */
+.search-trigger .icon,
+.theme-toggle .icon,
+.menu-toggle svg,
+.nav-toggle svg {
+  width: 1.125rem;
+  height: 1.125rem;
 }
 
 .theme-picker {
@@ -644,10 +667,17 @@ hr {
 
 /* --- 7. Documentation layout (sidebar | content | on this page) --------- */
 .doc-layout {
+  /* Collapsed to 0 by the sidebar toggle, so the article takes the space. */
+  --doc-side-col: var(--sl-sidebar-width);
   display: grid;
-  grid-template-columns: var(--sl-sidebar-width) minmax(0, 1fr) var(--sl-sidebar-width);
+  grid-template-columns: var(--doc-side-col) minmax(0, 1fr) var(--sl-sidebar-width);
   align-items: start;
   width: 100%;
+  transition: grid-template-columns 0.2s ease;
+}
+
+.doc-layout[data-sidebar='closed'] {
+  --doc-side-col: 0rem;
 }
 
 .doc-sidebar {
@@ -1164,11 +1194,11 @@ hr {
   gap: 1rem;
 }
 
-/* A single series card must not stretch across the whole page: cap the grid and
-   use auto-fill, so one card keeps the width of a project card instead. */
+/* A single series card must not stretch across the whole page, so the series
+   grid uses auto-fill. Everything else matches .card-grid exactly, so a series
+   card is always the same width as a project card beside it. */
 .card-grid--series {
-  grid-template-columns: repeat(auto-fill, minmax(min(24rem, 100%), 1fr));
-  max-width: 72rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
 }
 
 .card {
@@ -1209,6 +1239,9 @@ hr {
 }
 
 .card-meta {
+  /* Pushed to the bottom so the meta line and footer align across a card row,
+     whatever the summary and link list lengths are. */
+  margin-block-start: auto;
   color: var(--sl-color-gray-3);
   font-size: var(--sl-text-2xs);
   font-variant-numeric: tabular-nums;
@@ -1253,7 +1286,7 @@ hr {
 /* --- 12. Responsive behaviour ------------------------------------------- */
 @media (max-width: 72rem) {
   .doc-layout {
-    grid-template-columns: var(--sl-sidebar-width) minmax(0, 1fr);
+    grid-template-columns: var(--doc-side-col) minmax(0, 1fr);
   }
 
   .doc-toc {
@@ -1290,6 +1323,18 @@ hr {
 
   .nav-toggle {
     display: inline-flex;
+  }
+}
+
+/* The sidebar toggle is available at every width, so the column above collapses
+   instead of holding an empty gap. Below 50rem the sidebar is a drawer and
+   these rules do not apply. */
+@media (min-width: 50.001rem) {
+  .doc-layout[data-sidebar='closed'] .doc-sidebar {
+    padding-inline: 0;
+    border-inline-end: 0;
+    overflow: hidden;
+    visibility: hidden;
   }
 }
 
@@ -1336,10 +1381,6 @@ hr {
     visibility: visible;
   }
 
-  .menu-toggle {
-    display: inline-flex;
-  }
-
   .doc-main {
     padding: 1.5rem 1.25rem 3rem;
   }
@@ -1350,7 +1391,16 @@ hr {
 
   .search-trigger {
     min-width: 0;
-    padding: 0.375rem;
+    width: 2.25rem;
+    padding: 0;
+    justify-content: center;
+  }
+
+  /* Icon only here, so the box matches the other three exactly. */
+  .theme-picker {
+    width: 2.25rem;
+    padding-inline: 0;
+    justify-content: center;
   }
 
   .search-trigger .search-label,

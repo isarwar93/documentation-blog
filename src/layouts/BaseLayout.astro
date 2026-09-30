@@ -393,32 +393,52 @@ const searchIndex = [
         applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
       });
 
-      // --- Documentation sidebar drawer (small screens) -------------------
+      // --- Documentation sidebar, collapsible at every width ------------------
       const sidebar = document.getElementById('doc-sidebar');
       const sidebarToggle = document.querySelector<HTMLButtonElement>('[data-sidebar-toggle]');
       const sidebarOverlay = document.querySelector<HTMLElement>('[data-sidebar-overlay]');
+      const docLayout = document.querySelector<HTMLElement>('.doc-layout');
+      const SIDEBAR_KEY = 'ee-sidebar';
+      const wideScreen = window.matchMedia('(min-width: 50.001rem)');
 
       const setSidebarOpen = (open: boolean) => {
         if (!sidebar || !sidebarOverlay) return;
         sidebar.dataset.open = String(open);
         sidebarOverlay.dataset.open = String(open);
+        // Above the drawer breakpoint this collapses the grid column; below it the
+        // same flag slides the drawer in. One attribute covers both.
+        docLayout?.setAttribute('data-sidebar', open ? 'open' : 'closed');
         sidebarToggle?.setAttribute('aria-expanded', String(open));
         sidebarToggle?.setAttribute(
           'aria-label',
           open ? 'Close documentation sidebar' : 'Open documentation sidebar',
         );
+        // Only the wide-screen choice is worth remembering; a phone starts closed.
+        if (wideScreen.matches) localStorage.setItem(SIDEBAR_KEY, open ? 'open' : 'closed');
       };
 
       if (sidebar && sidebarToggle && sidebarOverlay) {
+        const storedSidebar = localStorage.getItem(SIDEBAR_KEY);
+        setSidebarOpen(wideScreen.matches ? storedSidebar !== 'closed' : false);
+
         sidebarToggle.addEventListener('click', () => {
           setSidebarOpen(sidebar.dataset.open !== 'true');
         });
         sidebarOverlay.addEventListener('click', () => setSidebarOpen(false));
+        // Tapping a link closes the drawer. On a wide screen the sidebar stays put.
         sidebar.addEventListener('click', (event) => {
-          if ((event.target as HTMLElement).closest('a')) setSidebarOpen(false);
+          if (!wideScreen.matches && (event.target as HTMLElement).closest('a')) {
+            setSidebarOpen(false);
+          }
         });
         document.addEventListener('keydown', (event) => {
           if (event.key === 'Escape') setSidebarOpen(false);
+        });
+        // Crossing the drawer breakpoint re-applies the right default for that width.
+        wideScreen.addEventListener('change', (event) => {
+          setSidebarOpen(
+            event.matches ? localStorage.getItem(SIDEBAR_KEY) !== 'closed' : false,
+          );
         });
       }
 
