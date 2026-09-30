@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import DocSidebar from '../components/DocSidebar.astro';
+import PageToc from '../components/PageToc.astro';
 import TocScrollSpy from '../components/TocScrollSpy.astro';
 import { articleDateValue, formatArticleDate, getSeriesDocs } from '../data/articles';
 import { getSidebarSections } from '../data/sidebar';
@@ -47,6 +48,12 @@ const sections = await getSidebarSections({
 
 const tocItems = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
 
+/**
+ * Below the `72rem` breakpoint the sticky column is hidden, so a part with more
+ * than three headings carries the same list as a panel above the article.
+ */
+const showInlineToc = tocItems.length > 3;
+
 const crumbs = [
   { label: 'Home', href: '/' },
   { label: 'Articles', href: '/articles/' },
@@ -80,6 +87,8 @@ const crumbs = [
           </li>
         </ol>
       </nav>
+
+      {showInlineToc && <PageToc headings={tocItems} variant="inline" />}
 
       <article class="sl-markdown-content">
         <header class="article-header">
@@ -140,18 +149,7 @@ const crumbs = [
     </div>
 
     {
-      tocItems.length > 0 && (
-        <aside class="doc-toc" aria-labelledby="toc-heading">
-          <h2 id="toc-heading">On this page</h2>
-          <ul>
-            {tocItems.map((heading) => (
-              <li class={`toc-depth-${heading.depth}`}>
-                <a href={`#${heading.slug}`}>{heading.text}</a>
-              </li>
-            ))}
-          </ul>
-        </aside>
-      )
+      tocItems.length > 0 && <PageToc headings={tocItems} />
     }
   </div>
 </BaseLayout>

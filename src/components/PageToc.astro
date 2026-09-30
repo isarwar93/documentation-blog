@@ -1,0 +1,64 @@
+---
+/**
+ * The "On this page" list of section headings, shared by both layouts.
+ *
+ * `aside` is the sticky right-hand column shown on wide screens. `inline` is the
+ * collapsible panel the layouts place above the article when that column is
+ * hidden, so the table of contents never becomes unreachable on a narrow screen.
+ */
+import type { TocHeading } from '../data/toc';
+
+interface Props {
+  /** H2/H3 headings of the rendered Markdown, in document order. */
+  headings: TocHeading[];
+  /** Where the list is rendered: the right column, or above the article. */
+  variant?: 'aside' | 'inline';
+}
+
+const { headings, variant = 'aside' } = Astro.props;
+---
+
+{
+  variant === 'aside' ? (
+    <aside class="doc-toc" aria-labelledby="toc-heading">
+      <h2 id="toc-heading">On this page</h2>
+      <ul>
+        {headings.map((heading) => (
+          <li class={`toc-depth-${heading.depth}`}>
+            <a href={`#${heading.slug}`}>{heading.text}</a>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  ) : (
+    <details class="doc-toc-inline" open>
+      <summary>
+        <span>On this page</span>
+        <svg
+          class="chevron"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="m9 5 7 7-7 7"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </summary>
+      <ul>
+        {headings.map((heading) => (
+          <li class={`toc-depth-${heading.depth}`}>
+            <a href={`#${heading.slug}`}>{heading.text}</a>
+          </li>
+        ))}
+      </ul>
+    </details>
+  )
+}

@@ -3,12 +3,15 @@
  * Highlights the section currently in view inside "On this page".
  *
  * Rendered by both documentation layouts, so chapter pages and article pages
- * share a single implementation of the scroll spy.
+ * share a single implementation of the scroll spy. The inline panel duplicates
+ * the sticky column on narrow screens, so it is highlighted as well.
  */
 ---
 
 <script>
-  const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.doc-toc a'));
+  const tocLinks = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>('.doc-toc a, .doc-toc-inline a'),
+  );
 
   if (tocLinks.length > 0) {
     const targets = tocLinks

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import DocSidebar from '../components/DocSidebar.astro';
+import PageToc from '../components/PageToc.astro';
 import TocScrollSpy from '../components/TocScrollSpy.astro';
 import { getProjectDocs } from '../data/docs';
 import { getSidebarSections } from '../data/sidebar';
@@ -51,6 +52,12 @@ const crumbs = [
 
 const tocItems = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
 
+/**
+ * Below the `72rem` breakpoint the sticky column is hidden, so a page with more
+ * than three headings carries the same list as a panel above the article.
+ */
+const showInlineToc = tocItems.length > 3;
+
 /** Sidebar tree: projects and article series, shared with `ArticleLayout`. */
 const sections = await getSidebarSections({
   section: 'projects',
@@ -86,6 +93,8 @@ const sections = await getSidebarSections({
         </ol>
       </nav>
 
+      {showInlineToc && <PageToc headings={tocItems} variant="inline" />}
+
       <article class="sl-markdown-content">
         <slot />
       </article>
@@ -114,18 +123,7 @@ const sections = await getSidebarSections({
       }
     </div>
 
-    <aside class="doc-toc" aria-labelledby="toc-heading">
-      <h2 id="toc-heading">On this page</h2>
-      <ul>
-        {
-          tocItems.map((heading) => (
-            <li class={`toc-depth-${heading.depth}`}>
-              <a href={`#${heading.slug}`}>{heading.text}</a>
-            </li>
-          ))
-        }
-      </ul>
-    </aside>
+    <PageToc headings={tocItems} />
   </div>
 </BaseLayout>
 

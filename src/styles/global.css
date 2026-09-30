@@ -868,7 +868,8 @@ hr {
   font-weight: 600;
 }
 
-.doc-toc ul {
+.doc-toc ul,
+.doc-toc-inline ul {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -878,24 +879,67 @@ hr {
   list-style: none;
 }
 
-.doc-toc a {
+.doc-toc a,
+.doc-toc-inline a {
   display: block;
   padding: 0.1875rem 0.625rem;
   color: var(--sl-color-gray-3);
   overflow-wrap: anywhere;
 }
 
-.doc-toc a:hover {
+.doc-toc a:hover,
+.doc-toc-inline a:hover {
   color: var(--sl-color-white);
 }
 
-.doc-toc a[aria-current='true'] {
+.doc-toc a[aria-current='true'],
+.doc-toc-inline a[aria-current='true'] {
   color: var(--sl-color-text-accent);
   font-weight: 600;
 }
 
-.doc-toc .toc-depth-3 a {
+.doc-toc .toc-depth-3 a,
+.doc-toc-inline .toc-depth-3 a {
   padding-inline-start: 1.25rem;
+}
+
+/* Below 72rem the sticky column is hidden; pages with more than three headings
+   carry the same list as a panel above the article instead. */
+.doc-toc-inline {
+  display: none;
+  margin-block-end: 2rem;
+  padding: 0.375rem 0.75rem 0.75rem;
+  border: 1px solid var(--sl-color-hairline-light);
+  border-radius: var(--sl-radius-md);
+  font-size: var(--sl-text-sm);
+}
+
+.doc-toc-inline > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.25rem;
+  color: var(--sl-color-white);
+  font-size: var(--sl-text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.doc-toc-inline > summary::-webkit-details-marker {
+  display: none;
+}
+
+.doc-toc-inline > summary .chevron {
+  flex: none;
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-inline-start: auto;
+  transition: transform 0.2s ease;
+}
+
+.doc-toc-inline[open] > summary .chevron {
+  transform: rotate(90deg);
 }
 
 /* --- 9. Prev / next pagination ------------------------------------------ */
@@ -1291,6 +1335,11 @@ hr {
 
   .doc-toc {
     display: none;
+  }
+
+  /* The column is gone, so the same list moves above the article. */
+  .doc-toc-inline {
+    display: block;
   }
 }
 
